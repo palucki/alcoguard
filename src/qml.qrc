@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pages/LoginForm.qml</file>
+        <file>pages/Welcome.qml</file>
+        <file>pages/main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>pages/Splash.qml</file>
+        <file>../images/splash.png</file>
+        <file>Database.js</file>
+        <file>../images/dario.jpg</file>
+        <file>pages/SignupForm.qml</file>
+        <file>pages/Alcometer.qml</file>
+        <file>../images/icons/add.png</file>
+        <file>../images/icons/remove.png</file>
+        <file>../images/icons/back.png</file>
+        <file>pages/EditDrink.qml</file>
+    </qresource>
+</RCC>
