@@ -61,8 +61,8 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
             Button {
                 id: addButtonOptions
-                Layout.preferredHeight: 0.1 * masterLayout.height
-                Layout.preferredWidth: 180
+                Layout.preferredHeight: 50
+                Layout.preferredWidth: 150
                 Layout.alignment: Qt.AlignHCenter
                 text: "Add"
                 icon.source: "../../images/icons/add.png"

@@ -5,12 +5,38 @@ import QtQuick.Layouts 1.13
 
 Page {
 
-    property var visibleTimeItems : 8
+    property var visibleTimeItems : 6
+    property int timeTumberHeight : 120
+    property int dateTumblerHeight: 60
     property var visibleDateItems : 3
-    property date itemDateTime : new Date("01-01-1970 00:00");
+    property date itemDateTime;
+    signal saveDrink;
+
+    function getDrink() {
+        return {
+            "timestamp": selectedDate(),
+            "beverage" : "vodka",
+            "amount" : 50,
+            "unit" : "ml"
+        }
+    }
+
+    function selectedDate() {
+        var day = dayTumbler.currentIndex + 1;
+        var month = monthTumbler.currentIndex;
+        var year = yearTumbler.currentIndex + 1970 ;
+        var hour = hoursTumbler.currentIndex;
+        var minute = minutesTumbler.currentIndex;
+
+        console.log(Qt.formatDateTime(new Date(year, month, day, hour, minute), "dd-MM-yyyy hh:mm"))
+
+        //        return Qt.formatDateTime(new Date(year, month, day, hour, minute), "dd-MM-yyyy hh:mm")
+        return new Date(year, month, day, hour, minute)
+    }
 
     onItemDateTimeChanged: {
         console.log("Cuurent time " + itemDateTime);
+
         var hour = parseInt(Qt.formatTime(itemDateTime, "hh"));
         var minute =  parseInt(Qt.formatTime(itemDateTime, "mm"));
         hoursTumbler.contentItem.positionViewAtIndex(hour, ListView.Center);
@@ -60,8 +86,8 @@ Page {
         id: delegateComponent
         Label {
             text: Tumbler.tumbler.count === 24 || Tumbler.tumbler.count == 60 ? formatTimeText(Tumbler.tumbler.count, modelData) :
-                  Tumbler.tumbler.count === 31 ? formatDayText(modelData) :
-                  Tumbler.tumbler.count === 12  ? formatMonthText(modelData) : formatYearText(modelData);
+                                                                                Tumbler.tumbler.count === 31 ? formatDayText(modelData) :
+                                                                                                               Tumbler.tumbler.count === 12  ? formatMonthText(modelData) : formatYearText(modelData);
             opacity: 1.0 - Math.abs(Tumbler.displacement) / (Tumbler.tumbler.visibleItemCount / 2)
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -69,109 +95,244 @@ Page {
     }
 
 
-    Column {
+    ColumnLayout {
+        id: masterLayout
+        spacing: 10
         anchors.centerIn: parent
-        Row {
-            id: dateRow
-            anchors.horizontalCenter: parent.horizontalCenter
 
-            Tumbler {
-                id: dayTumbler
-                model: 31
-                delegate: delegateComponent
-                visibleItemCount: visibleDateItems
+        ColumnLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Row {
+                id: dateRow
+                //                anchors.horizontalCenter: parent.horizontalCenter
+                height: dateTumblerHeight
+                Tumbler {
+                    id: dayTumbler
+                    model: 31
+                    delegate: delegateComponent
+                    visibleItemCount: visibleDateItems
+                    height: parent.height
+                    contentItem: ListView {
+                        model: dayTumbler.model
+                        delegate: dayTumbler.delegate
 
-                contentItem: ListView {
-                    model: dayTumbler.model
-                    delegate: dayTumbler.delegate
-
-                    snapMode: ListView.SnapToItem
-                    highlightRangeMode: ListView.StrictlyEnforceRange
-                    preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
-                    preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
-                    clip: true
+                        snapMode: ListView.SnapToItem
+                        highlightRangeMode: ListView.StrictlyEnforceRange
+                        preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
+                        preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
+                        clip: true
+                    }
                 }
-            }
-            Tumbler {
-                id: monthTumbler
-                model: 12
-                delegate: delegateComponent
-                visibleItemCount: visibleDateItems
+                Tumbler {
+                    id: monthTumbler
+                    model: 12
+                    delegate: delegateComponent
+                    visibleItemCount: visibleDateItems
+                    height: parent.height
+                    contentItem: ListView {
+                        model: monthTumbler.model
+                        delegate: monthTumbler.delegate
 
-                contentItem: ListView {
-                    model: monthTumbler.model
-                    delegate: monthTumbler.delegate
-
-                    snapMode: ListView.SnapToItem
-                    highlightRangeMode: ListView.StrictlyEnforceRange
-                    preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
-                    preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
-                    clip: true
+                        snapMode: ListView.SnapToItem
+                        highlightRangeMode: ListView.StrictlyEnforceRange
+                        preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
+                        preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
+                        clip: true
+                    }
                 }
-            }
-            Tumbler {
-                id: yearTumbler
-                model: 100
-                delegate: delegateComponent
-                visibleItemCount: visibleDateItems
+                Tumbler {
+                    id: yearTumbler
+                    model: 100
+                    delegate: delegateComponent
+                    visibleItemCount: visibleDateItems
+                    height: parent.height
+                    contentItem: ListView {
+                        model: yearTumbler.model
+                        delegate: yearTumbler.delegate
 
-                contentItem: ListView {
-                    model: yearTumbler.model
-                    delegate: yearTumbler.delegate
-
-                    snapMode: ListView.SnapToItem
-                    highlightRangeMode: ListView.StrictlyEnforceRange
-                    preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
-                    preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
-                    clip: true
+                        snapMode: ListView.SnapToItem
+                        highlightRangeMode: ListView.StrictlyEnforceRange
+                        preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
+                        preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
+                        clip: true
+                    }
                 }
             }
         }
 
-        Row {
-            id: timeRow
-            anchors.horizontalCenter: parent.horizontalCenter
+        ColumnLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-            Tumbler {
-                id: hoursTumbler
-                model: 24
-                delegate: delegateComponent
-                visibleItemCount: visibleTimeItems
 
-                contentItem: ListView {
-                    height: 100
-                    model: hoursTumbler.model
-                    delegate: hoursTumbler.delegate
+            Row {
+                id: timeRow
+                //                anchors.horizontalCenter: parent.horizontalCenter
+                height: timeTumberHeight
+                Tumbler {
+                    id: hoursTumbler
+                    model: 24
+                    delegate: delegateComponent
+                    visibleItemCount: visibleTimeItems
+                    height: parent.height
+                    contentItem: ListView {
+                        height: 100
+                        model: hoursTumbler.model
+                        delegate: hoursTumbler.delegate
 
-                    snapMode: ListView.SnapToItem
-                    highlightRangeMode: ListView.StrictlyEnforceRange
-                    preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
-                    preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
-                    clip: true
+                        snapMode: ListView.SnapToItem
+                        highlightRangeMode: ListView.StrictlyEnforceRange
+                        preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
+                        preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
+                        clip: true
+                    }
                 }
-            }
 
-            Tumbler {
-                id: minutesTumbler
-                model: 60
-                delegate: delegateComponent
-                visibleItemCount: visibleTimeItems
+                Tumbler {
+                    id: minutesTumbler
+                    model: 60
+                    delegate: delegateComponent
+                    visibleItemCount: visibleTimeItems
+                    height: parent.height
+                    contentItem:
 
-                contentItem:
+                        ListView { //change to PathView to have better effects and wrappig around
+                        model: minutesTumbler.model
+                        delegate: minutesTumbler.delegate
 
-                    ListView { //change to PathView to have better effects and wrappig around
-                    model: minutesTumbler.model
-                    delegate: minutesTumbler.delegate
-
-                    snapMode: ListView.SnapToItem
-                    highlightRangeMode: ListView.StrictlyEnforceRange
-                    preferredHighlightBegin: height / 2 - (height / minutesTumbler.visibleItemCount / 2)
-                    preferredHighlightEnd: height / 2 + (height / minutesTumbler.visibleItemCount / 2)
-                    clip: true
+                        snapMode: ListView.SnapToItem
+                        highlightRangeMode: ListView.StrictlyEnforceRange
+                        preferredHighlightBegin: height / 2 - (height / minutesTumbler.visibleItemCount / 2)
+                        preferredHighlightEnd: height / 2 + (height / minutesTumbler.visibleItemCount / 2)
+                        clip: true
+                    }
                 }
             }
         }
     }
+
+    ColumnLayout {
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        ColumnLayout {
+            Button {
+                id: addButtonOptions
+                Layout.preferredHeight: 50
+                Layout.preferredWidth: 150
+                text: "Save"
+                icon.source: "../../images/icons/add.png"
+                onClicked: saveDrink()
+            }
+        }
+    }
+
+
+    //    Column {
+    //        anchors.centerIn: parent
+    //        Row {
+    //            id: dateRow
+    //            anchors.horizontalCenter: parent.horizontalCenter
+    //            height: dateTumblerHeight
+    //            Tumbler {
+    //                id: dayTumbler
+    //                model: 31
+    //                delegate: delegateComponent
+    //                visibleItemCount: visibleDateItems
+    //                height: parent.height
+    //                contentItem: ListView {
+    //                    model: dayTumbler.model
+    //                    delegate: dayTumbler.delegate
+
+    //                    snapMode: ListView.SnapToItem
+    //                    highlightRangeMode: ListView.StrictlyEnforceRange
+    //                    preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
+    //                    preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
+    //                    clip: true
+    //                }
+    //            }
+    //            Tumbler {
+    //                id: monthTumbler
+    //                model: 12
+    //                delegate: delegateComponent
+    //                visibleItemCount: visibleDateItems
+    //                height: parent.height
+    //                contentItem: ListView {
+    //                    model: monthTumbler.model
+    //                    delegate: monthTumbler.delegate
+
+    //                    snapMode: ListView.SnapToItem
+    //                    highlightRangeMode: ListView.StrictlyEnforceRange
+    //                    preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
+    //                    preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
+    //                    clip: true
+    //                }
+    //            }
+    //            Tumbler {
+    //                id: yearTumbler
+    //                model: 100
+    //                delegate: delegateComponent
+    //                visibleItemCount: visibleDateItems
+    //                height: parent.height
+    //                contentItem: ListView {
+    //                    model: yearTumbler.model
+    //                    delegate: yearTumbler.delegate
+
+    //                    snapMode: ListView.SnapToItem
+    //                    highlightRangeMode: ListView.StrictlyEnforceRange
+    //                    preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
+    //                    preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
+    //                    clip: true
+    //                }
+    //            }
+    //        }
+
+    //        Row {
+    //            id: timeRow
+    //            anchors.horizontalCenter: parent.horizontalCenter
+    //            height: timeTumberHeight
+    //            Tumbler {
+    //                id: hoursTumbler
+    //                model: 24
+    //                delegate: delegateComponent
+    //                visibleItemCount: visibleTimeItems
+    //                height: parent.height
+    //                contentItem: ListView {
+    //                    height: 100
+    //                    model: hoursTumbler.model
+    //                    delegate: hoursTumbler.delegate
+
+    //                    snapMode: ListView.SnapToItem
+    //                    highlightRangeMode: ListView.StrictlyEnforceRange
+    //                    preferredHighlightBegin: height / 2 - (height / hoursTumbler.visibleItemCount / 2)
+    //                    preferredHighlightEnd: height / 2 + (height / hoursTumbler.visibleItemCount / 2)
+    //                    clip: true
+    //                }
+    //            }
+
+    //            Tumbler {
+    //                id: minutesTumbler
+    //                model: 60
+    //                delegate: delegateComponent
+    //                visibleItemCount: visibleTimeItems
+    //                height: parent.height
+    //                contentItem:
+
+    //                    ListView { //change to PathView to have better effects and wrappig around
+    //                    model: minutesTumbler.model
+    //                    delegate: minutesTumbler.delegate
+
+    //                    snapMode: ListView.SnapToItem
+    //                    highlightRangeMode: ListView.StrictlyEnforceRange
+    //                    preferredHighlightBegin: height / 2 - (height / minutesTumbler.visibleItemCount / 2)
+    //                    preferredHighlightEnd: height / 2 + (height / minutesTumbler.visibleItemCount / 2)
+    //                    clip: true
+    //                }
+    //            }
+
+
+
+    //        }
+    //    }
 
 
 

@@ -27,7 +27,7 @@ ApplicationWindow {
     }
 
     onIsLoggedInChanged: {
-//        swipeView.removeItem(loginScreen);
+        //        swipeView.removeItem(loginScreen);
     }
 
     SwipeView {
@@ -73,17 +73,19 @@ ApplicationWindow {
             onAddDrink: {
                 swipeView.currentIndex = 5
                 editDrink.itemDateTime = new Date();
-//                drinkModel.append({
-//                                          "timestamp": Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss"),
-//                                          "beverage" : "vodka",
-//                                          "amount" : 50,
-//                                          "unit" : "ml"})
+
             }
 
         }
 
         EditDrink {
             id: editDrink
+            onSaveDrink: {
+                swipeView.currentIndex = 4
+//                console.log(editDrink.getDrink().beverage)
+                drinkModel.append(editDrink.getDrink())
+            }
+
         }
 
         Timer {
@@ -94,7 +96,7 @@ ApplicationWindow {
             onTriggered: {
                 console.log("Timeout")
                 //                swipeView.isInteractive = true
-//                swipeView.removeItem(splashScreen)
+                //                swipeView.removeItem(splashScreen)
                 isInitialized = true
 
                 console.log("Session token: " + sessionToken )
@@ -109,22 +111,48 @@ ApplicationWindow {
 
     ListModel {
         id: drinkModel
-        ListElement { timestamp: "2020-12-12 21:00:00"; beverage: "vodka"; amount: 50; unit: "ml" }
-        ListElement { timestamp: "2020-12-12 21:10:00"; beverage: "vodka"; amount: 50; unit: "ml" }
-        ListElement { timestamp: "2020-12-12 21:20:00"; beverage: "vodka"; amount: 50; unit: "ml" }
-        ListElement { timestamp: "2020-12-12 21:30:00"; beverage: "vodka"; amount: 50; unit: "ml" }
-        ListElement { timestamp: "2020-12-12 21:40:00"; beverage: "vodka"; amount: 50; unit: "ml" }
+//        ListElement { timestamp: "13-12-2020 21:00"; beverage: "vodka"; amount: 50; unit: "ml" }
+//        ListElement { timestamp: "12-12-2020 21:10"; beverage: "vodka"; amount: 50; unit: "ml" }
+//        ListElement { timestamp: "12-12-2020 21:20"; beverage: "vodka"; amount: 50; unit: "ml" }
+//        ListElement { timestamp: "12-12-2020 21:30"; beverage: "vodka"; amount: 50; unit: "ml" }
+//        ListElement { timestamp: "12-12-2020 21:40"; beverage: "vodka"; amount: 50; unit: "ml" }
     }
 
     Component {
         id: drinkDelegate
 
+
+
+
         RowLayout {
-            //            width: parent.width
+            //                height: 50
+
+
+
             Text {
-                text: Qt.formatDateTime(Date.fromLocaleString(Qt.locale(), timestamp, "yyyy-MM-dd hh:mm:ss"), "hh:mm") + " " + amount + unit + " of " + beverage;
+                //text: Qt.formatDateTime(Date.fromLocaleString(Qt.locale(), timestamp, "dd-MM-yyyy hh:mm"), "hh:mm") + " " + amount + unit + " of " + beverage;
+                text: Qt.formatDateTime(timestamp, "hh:mm") + " " + amount + unit + " of " + beverage;
                 font.pixelSize: 24
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        swipeView.currentIndex = 5
+                        editDrink.itemDateTime = drinkModel.get(index).timestamp;
+                    }
+                }
             }
+
+            Button {
+                id: editOneButton
+                text: "Edit"
+                icon.source: "../../images/icons/edit.png"
+                onClicked: {
+                    swipeView.currentIndex = 5
+                    editDrink.itemDateTime = drinkModel.get(index).timestamp;
+                }
+            }
+
             Button {
                 id: removeOneButton
                 text: "Remove"
