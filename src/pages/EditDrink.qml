@@ -10,10 +10,12 @@ Page {
     property int dateTumblerHeight: 60
     property var visibleDateItems : 3
     property date itemDateTime;
+    property var drinkId : null;
     signal saveDrink;
 
     function getDrink() {
         return {
+            "id" : drinkId,
             "timestamp": selectedDate(),
             "beverage" : "vodka",
             "amount" : 50,

@@ -16,11 +16,17 @@ ApplicationWindow {
     property bool isInitialized: false
     property bool isLoggedIn: false
     property var sessionToken : ""
+    property var currentDrinkId : 0;
 
     //    Settings {
     //        id: settingsId
     //        property string token: ""
     //    }
+
+    function find(model, criteria) {
+      for(var i = 0; i < model.count; ++i) if (criteria(model.get(i))) return i;
+      return null
+    }
 
     Component.onCompleted: {
 
@@ -72,20 +78,30 @@ ApplicationWindow {
             drinkListDelegate: drinkDelegate
             onAddDrink: {
                 swipeView.currentIndex = 5
+                editDrink.drinkId = null;
                 editDrink.itemDateTime = new Date();
-
             }
-
         }
 
         EditDrink {
             id: editDrink
             onSaveDrink: {
                 swipeView.currentIndex = 4
-//                console.log(editDrink.getDrink().beverage)
-                drinkModel.append(editDrink.getDrink())
-            }
 
+                var drink = editDrink.getDrink();
+
+                if(drink.id === null)
+                {
+                    drink.id = currentDrinkId++;
+                    drinkModel.append(drink)
+                }
+                else
+                {
+                    console.log(drink.id, drink.timestamp)
+                    var index = find(drinkModel, function(item) { return item.id === drink.id })
+                    drinkModel.set(index, drink);
+                }
+            }
         }
 
         Timer {
@@ -110,6 +126,8 @@ ApplicationWindow {
     }
 
     ListModel {
+
+
         id: drinkModel
 //        ListElement { timestamp: "13-12-2020 21:00"; beverage: "vodka"; amount: 50; unit: "ml" }
 //        ListElement { timestamp: "12-12-2020 21:10"; beverage: "vodka"; amount: 50; unit: "ml" }
@@ -120,15 +138,8 @@ ApplicationWindow {
 
     Component {
         id: drinkDelegate
-
-
-
-
         RowLayout {
             //                height: 50
-
-
-
             Text {
                 //text: Qt.formatDateTime(Date.fromLocaleString(Qt.locale(), timestamp, "dd-MM-yyyy hh:mm"), "hh:mm") + " " + amount + unit + " of " + beverage;
                 text: Qt.formatDateTime(timestamp, "hh:mm") + " " + amount + unit + " of " + beverage;
@@ -137,7 +148,8 @@ ApplicationWindow {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        swipeView.currentIndex = 5
+                        swipeView.currentIndex = 5;
+                        editDrink.drinkId = drinkModel.get(index).id;
                         editDrink.itemDateTime = drinkModel.get(index).timestamp;
                     }
                 }
@@ -148,7 +160,8 @@ ApplicationWindow {
                 text: "Edit"
                 icon.source: "../../images/icons/edit.png"
                 onClicked: {
-                    swipeView.currentIndex = 5
+                    swipeView.currentIndex = 5;
+                    editDrink.drinkId = drinkModel.get(index).id;
                     editDrink.itemDateTime = drinkModel.get(index).timestamp;
                 }
             }
