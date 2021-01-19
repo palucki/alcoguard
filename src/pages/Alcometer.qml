@@ -7,9 +7,49 @@ Page {
     property var sessionToken : ""
     property var drinkListModel;
     property var drinkListDelegate;
+    property var beverages: ["vodka", "beer", "wine", "whisky"]
     signal addDrink;
     //    property var locale: Qt.locale()
 
+    //    Component.onCompleted: {
+    //        addSeries()
+    //    }
+
+    //    function addSeries()
+    //    {
+    //        for(var i = 0; i < beverages.count; ++i)
+    //            console.log(beverages[i]);
+    //    }
+
+    function updateGraph(model) {
+        chartViewId.removeAllSeries();
+
+        //        var min = new Date()
+        //        var max = new Date(1970,0,1);
+
+        var series = chartViewId.createSeries(ChartView.SeriesTypeLine, beverages[0], dateTimeAxis, valueAxis);
+
+        for(var j = 0; j < model.count; j ++)
+        {
+            var x = toMsecsSinceEpoch(model.get(j).timestamp);
+            var y = j+1;
+            series.append(x, y);
+
+            //            min = min > model.get(j).timestamp ? model.get(j).timestamp : min;
+            //            max = max < model.get(j).timestamp ? model.get(j).timestamp : max;
+        }
+
+        dateTimeAxis.min = new Date(2021,0,20,0,0);
+        dateTimeAxis.max = new Date();
+
+        valueAxis.min = 0;
+        valueAxis.max = model.count + 1;
+    }
+
+    function toMsecsSinceEpoch(date) {
+        var msecs = date.getTime();
+        return msecs;
+    }
 
     ColumnLayout {
         id: masterLayout
@@ -24,17 +64,36 @@ Page {
                 Layout.preferredWidth: masterLayout.width
                 Layout.preferredHeight: 0.3 * masterLayout.height
                 antialiasing: true
-                title: "Tytul"
-                LineSeries {
-                    name: "LineSeries"
-                    XYPoint { x: 0; y: 0 }
-                    XYPoint { x: 1.1; y: 2.1 }
-                    XYPoint { x: 1.9; y: 3.3 }
-                    XYPoint { x: 2.1; y: 2.1 }
-                    XYPoint { x: 2.9; y: 4.9 }
-                    XYPoint { x: 3.4; y: 3.0 }
-                    XYPoint { x: 4.1; y: 3.3 }
-                }
+                title: "Drinks consumption over time"
+                //                LineSeries {
+                //                    id : vodkaSeries
+                //                    axisX: DateTimeAxis {
+                //                        format: "hh:mm"
+                //                    }
+                //                    axisY: ValueAxis {
+                //                        min: 0
+                //                        max: 150
+                //                    }
+
+                //                    name: beverages[0]
+                //                    XYPoint { x: toMsecsSinceEpoch(new Date(2021, 0, 19, 23, 00)); y: 1 }
+                //                    XYPoint { x: toMsecsSinceEpoch(new Date(2021, 0, 19, 23, 10)); y: 2 }
+                //                    XYPoint { x: toMsecsSinceEpoch(new Date(2021, 0, 19, 23, 20)); y: 3 }
+                //                    XYPoint { x: toMsecsSinceEpoch(new Date(2021, 0, 19, 23, 25)); y: 4 }
+                //                    XYPoint { x: toMsecsSinceEpoch(new Date(2021, 0, 19, 23, 30)); y: 5 }
+                //                }
+
+                axes: [
+                    DateTimeAxis {
+                        id: dateTimeAxis
+                        format: "hh:mm"
+                    },
+                    ValueAxis {
+                        id: valueAxis
+//                        min: 0
+//                        max: 30
+                    }
+                ]
             }
         }
 

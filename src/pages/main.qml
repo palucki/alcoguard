@@ -101,6 +101,8 @@ ApplicationWindow {
                     var index = find(drinkModel, function(item) { return item.id === drink.id })
                     drinkModel.set(index, drink);
                 }
+
+                alcometerScreen.updateGraph(drinkModel);
             }
         }
 
