@@ -74,8 +74,6 @@ ApplicationWindow {
         Alcometer {
             id: alcometerScreen
             sessionToken : root.sessionToken
-            drinkListModel: drinkModel
-            drinkListDelegate: drinkDelegate
             onAddDrink: {
                 swipeView.currentIndex = 5
                 editDrink.drinkId = null;
@@ -89,20 +87,7 @@ ApplicationWindow {
                 swipeView.currentIndex = 4
 
                 var drink = editDrink.getDrink();
-
-                if(drink.id === null)
-                {
-                    drink.id = currentDrinkId++;
-                    drinkModel.append(drink)
-                }
-                else
-                {
-                    console.log(drink.id, drink.timestamp)
-                    var index = find(drinkModel, function(item) { return item.id === drink.id })
-                    drinkModel.set(index, drink);
-                }
-
-                alcometerScreen.updateGraph(drinkModel);
+                alcometerScreen.saveDrink(drink);
             }
         }
 
@@ -127,57 +112,7 @@ ApplicationWindow {
 
     }
 
-    ListModel {
 
-
-        id: drinkModel
-//        ListElement { timestamp: "13-12-2020 21:00"; beverage: "vodka"; amount: 50; unit: "ml" }
-//        ListElement { timestamp: "12-12-2020 21:10"; beverage: "vodka"; amount: 50; unit: "ml" }
-//        ListElement { timestamp: "12-12-2020 21:20"; beverage: "vodka"; amount: 50; unit: "ml" }
-//        ListElement { timestamp: "12-12-2020 21:30"; beverage: "vodka"; amount: 50; unit: "ml" }
-//        ListElement { timestamp: "12-12-2020 21:40"; beverage: "vodka"; amount: 50; unit: "ml" }
-    }
-
-    Component {
-        id: drinkDelegate
-        RowLayout {
-            //                height: 50
-            Text {
-                //text: Qt.formatDateTime(Date.fromLocaleString(Qt.locale(), timestamp, "dd-MM-yyyy hh:mm"), "hh:mm") + " " + amount + unit + " of " + beverage;
-                text: Qt.formatDateTime(timestamp, "hh:mm") + " " + amount + unit + " of " + beverage;
-                font.pixelSize: 24
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        swipeView.currentIndex = 5;
-                        editDrink.drinkId = drinkModel.get(index).id;
-                        editDrink.itemDateTime = drinkModel.get(index).timestamp;
-                    }
-                }
-            }
-
-            Button {
-                id: editOneButton
-                text: "Edit"
-                icon.source: "../../images/icons/edit.png"
-                onClicked: {
-                    swipeView.currentIndex = 5;
-                    editDrink.drinkId = drinkModel.get(index).id;
-                    editDrink.itemDateTime = drinkModel.get(index).timestamp;
-                }
-            }
-
-            Button {
-                id: removeOneButton
-                text: "Remove"
-                icon.source: "../../images/icons/remove.png"
-                onClicked: {
-                    drinkModel.remove(index);
-                }
-            }
-        }
-    }
 
     //    footer: TabBar {
     //        id: tabBar

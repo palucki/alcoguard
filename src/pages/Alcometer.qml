@@ -3,53 +3,182 @@ import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.13
 import QtCharts 2.15
 //import QtQml 2.15
+import QtQml.Models 2.13
+
 Page {
     property var sessionToken : ""
-    property var drinkListModel;
-    property var drinkListDelegate;
+//    property var drinkListModel ;
+//    property var drinkListDelegate;
     property var beverages: ["vodka", "beer", "wine", "whisky"]
     signal addDrink;
-    //    property var locale: Qt.locale()
 
-    //    Component.onCompleted: {
-    //        addSeries()
-    //    }
-
-    //    function addSeries()
-    //    {
-    //        for(var i = 0; i < beverages.count; ++i)
-    //            console.log(beverages[i]);
-    //    }
-
-    function updateGraph(model) {
+    function updateGraph() {
         chartViewId.removeAllSeries();
-
-        //        var min = new Date()
-        //        var max = new Date(1970,0,1);
 
         var series = chartViewId.createSeries(ChartView.SeriesTypeLine, beverages[0], dateTimeAxis, valueAxis);
 
-        for(var j = 0; j < model.count; j ++)
+        for(var j = 0; j < drinkSortedModel.count; j ++)
         {
-            var x = toMsecsSinceEpoch(model.get(j).timestamp);
+            var x = toMsecsSinceEpoch(drinkSortedModel.model.get(j).timestamp);
             var y = j+1;
             series.append(x, y);
 
-            //            min = min > model.get(j).timestamp ? model.get(j).timestamp : min;
-            //            max = max < model.get(j).timestamp ? model.get(j).timestamp : max;
+            console.log(x)
         }
 
-        dateTimeAxis.min = new Date(2021,0,20,0,0);
-        dateTimeAxis.max = new Date();
+//        console.log("items " + drinkSortedModel.items.get(0).groups)
 
         valueAxis.min = 0;
-        valueAxis.max = model.count + 1;
+        valueAxis.max = drinkSortedModel.count >= 15 ? drinkSortedModel.count + 1 : 15;
     }
 
     function toMsecsSinceEpoch(date) {
         var msecs = date.getTime();
         return msecs;
     }
+
+    function saveDrink(drink) {
+        if(drink.id === null)
+        {
+            drink.id = currentDrinkId++;
+            drinkModel.append(drink)
+        }
+        else
+        {
+            console.log(drink.id, drink.timestamp)
+            var index = find(drinkModel, function(item) { return item.id === drink.id })
+            drinkModel.remove(index);
+            drinkModel.append(drink);
+//            drinkModel.set(index, drink);
+//            drinkSortedModel.sort(drinkSortedModel.lessThan[0]);
+        }
+
+        updateGraph()
+    }
+
+    Component {
+        id: drinkDelegate
+        RowLayout {
+            //                height: 50
+            Text {
+                //text: Qt.formatDateTime(Date.fromLocaleString(Qt.locale(), timestamp, "dd-MM-yyyy hh:mm"), "hh:mm") + " " + amount + unit + " of " + beverage;
+                text: Qt.formatDateTime(timestamp, "hh:mm") + " " + amount + unit + " of " + beverage;
+                font.pixelSize: 24
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        swipeView.currentIndex = 5;
+                        editDrink.drinkId = drinkModel.get(index).id;
+                        editDrink.itemDateTime = drinkModel.get(index).timestamp;
+                    }
+                }
+            }
+
+            Button {
+                id: editOneButton
+                text: "Edit"
+                icon.source: "../../images/icons/edit.png"
+                onClicked: {
+                    swipeView.currentIndex = 5;
+                    editDrink.drinkId = drinkModel.get(index).id;
+                    editDrink.itemDateTime = drinkModel.get(index).timestamp;
+                }
+            }
+
+            Button {
+                id: removeOneButton
+                text: "Remove"
+                icon.source: "../../images/icons/remove.png"
+                onClicked: {
+                    drinkModel.remove(index);
+                }
+            }
+        }
+    }
+
+    ListModel {
+        id: drinkModel
+//        ListElement { timestamp: "13-12-2020 21:00"; beverage: "vodka"; amount: 50; unit: "ml" }
+//        ListElement { timestamp: "12-12-2020 21:10"; beverage: "vodka"; amount: 50; unit: "ml" }
+//        ListElement { timestamp: "12-12-2020 21:20"; beverage: "vodka"; amount: 50; unit: "ml" }
+//        ListElement { timestamp: "12-12-2020 21:30"; beverage: "vodka"; amount: 50; unit: "ml" }
+//        ListElement { timestamp: "12-12-2020 21:40"; beverage: "vodka"; amount: 50; unit: "ml" }
+    }
+
+    DelegateModel {
+        id: drinkSortedModel
+        property var lessThan: [
+            function(left, right) { return left.timestamp < right.timestamp },
+//            function(left, right) { return left.type < right.type },
+//            function(left, right) { return left.age < right.age },
+//            function(left, right) {
+//                if (left.size == "Small")
+//                    return true
+//                else if (right.size == "Small")
+//                    return false
+//                else if (left.size == "Medium")
+//                    return true
+//                else
+//                    return false
+//            }
+        ]
+
+        property int sortOrder: 0; //orderSelector.selectedIndex
+        onSortOrderChanged: items.setGroups(0, items.count, "unsorted")
+
+//![6]
+//![3]
+        function insertPosition(lessThan, item) {
+            var lower = 0
+            var upper = items.count
+            while (lower < upper) {
+                var middle = Math.floor(lower + (upper - lower) / 2)
+                var result = lessThan(item.model, items.get(middle).model);
+                if (result) {
+                    upper = middle
+                } else {
+                    lower = middle + 1
+                }
+            }
+            return lower
+        }
+
+        function sort(lessThan) {
+            while (unsortedItems.count > 0) {
+                var item = unsortedItems.get(0)
+                var index = insertPosition(lessThan, item)
+
+                item.groups = "items"
+
+                items.move(item.itemsIndex, index)
+            }
+        }
+//![3]
+
+//![1]
+        items.includeByDefault: false
+//![5]
+        groups: DelegateModelGroup {
+            id: unsortedItems
+            name: "unsorted"
+
+            includeByDefault: true
+//![1]
+            onChanged: {
+                if (drinkSortedModel.sortOrder == drinkSortedModel.lessThan.length)
+                    setGroups(0, count, "items")
+                else
+                    drinkSortedModel.sort(drinkSortedModel.lessThan[0])
+            }
+//![2]
+        }
+//![2]
+//![5]
+        model: drinkModel
+        delegate: drinkDelegate
+    }
+
 
     ColumnLayout {
         id: masterLayout
@@ -90,8 +219,8 @@ Page {
                     },
                     ValueAxis {
                         id: valueAxis
-//                        min: 0
-//                        max: 30
+                        //                        min: 0
+                        //                        max: 30
                     }
                 ]
             }
@@ -99,18 +228,35 @@ Page {
 
         ColumnLayout {
             Layout.alignment: Qt.AlignCenter
+//            ListView {
+//                id: alcoListId
+                //            anchors.top: chartViewId.bottom
+//                Layout.alignment: Qt.AlignHCenter
+//                Layout.preferredWidth: masterLayout.width
+//                Layout.preferredHeight: 0.3 * masterLayout.height
+////                Layout.fillHeight: true
+
+//                clip: true
+//                model: drinkSortedModel
+//                delegate: drinkListDelegate
+//                ScrollBar.vertical: ScrollBar { id: scrollBarId}
+//            }
+
             ListView {
                 id: alcoListId
-                //            anchors.top: chartViewId.bottom
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: masterLayout.width
                 Layout.preferredHeight: 0.6 * masterLayout.height
-                Layout.fillHeight: true
-
+//                anchors {
+//                    left: parent.left; top: parent.top; right: parent.right;// bottom: orderSelector.top;
+//                    margins: 2
+//                }
                 clip: true
-                model: drinkListModel
-                delegate: drinkListDelegate
+                model: drinkSortedModel
                 ScrollBar.vertical: ScrollBar { id: scrollBarId}
+
+                spacing: 4
+                cacheBuffer: 50
             }
 
         }
