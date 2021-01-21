@@ -12,24 +12,51 @@ Page {
     property var beverages: ["vodka", "beer", "wine", "whisky"]
     signal addDrink;
 
+    function updateAxes() {
+//        var mint =  new Date();
+//        var maxt =  new Date(1970, 0, 1);
+
+//        for(var j = 0; j < drinkModel.count; j ++)
+//        {
+//            mint = (mint > drinkModel.get(j).timestamp ? drinkModel.get(j).timestamp : mint);
+//            maxt = (maxt < drinkModel.get(j).timestamp ? drinkModel.get(j).timestamp : maxt);
+//        }
+
+//        for(var j = 0; j < drinkSortedModel.items.count; j ++)
+//        {
+//            console.log(drinkSortedModel.items.get(j).model.timestamp)
+//        }
+
+        var mint = drinkSortedModel.items.get(0).model.timestamp;
+        var maxt = drinkSortedModel.items.get(drinkSortedModel.items.count - 1).model.timestamp
+
+        mint.setMinutes(0);
+        maxt.setHours(maxt.getHours() + 1);
+        maxt.setMinutes(0);
+
+        console.log("new axes [%1 - %2]".arg(Qt.formatDateTime(mint, "hh:mm")).arg(Qt.formatDateTime(maxt, "hh:mm")))
+
+        dateTimeAxis.min = mint;
+        dateTimeAxis.max = maxt;
+        dateTimeAxis.format = "hh:mm"
+        dateTimeAxis.tickCount = 10; //drinkSortedModel.items.count
+
+        valueAxis.min = 0;
+        valueAxis.max = drinkModel.count >= 15 ? drinkModel.count + 1 : 15;
+    }
+
     function updateGraph() {
         chartViewId.removeAllSeries();
 
         var series = chartViewId.createSeries(ChartView.SeriesTypeLine, beverages[0], dateTimeAxis, valueAxis);
 
-        for(var j = 0; j < drinkSortedModel.count; j ++)
+        for(var j = 0; j < drinkSortedModel.items.count; j ++)
         {
-            var x = toMsecsSinceEpoch(drinkSortedModel.model.get(j).timestamp);
+            var x = drinkSortedModel.items.get(j).model.timestamp;
             var y = j+1;
             series.append(x, y);
-
-            console.log(x)
+//            console.log(x)
         }
-
-//        console.log("items " + drinkSortedModel.items.get(0).groups)
-
-        valueAxis.min = 0;
-        valueAxis.max = drinkSortedModel.count >= 15 ? drinkSortedModel.count + 1 : 15;
     }
 
     function toMsecsSinceEpoch(date) {
@@ -54,6 +81,7 @@ Page {
         }
 
         updateGraph()
+        updateAxes();
     }
 
     Component {
@@ -109,7 +137,9 @@ Page {
     DelegateModel {
         id: drinkSortedModel
         property var lessThan: [
-            function(left, right) { return left.timestamp < right.timestamp },
+            function(left, right) {
+                return left.timestamp < right.timestamp
+            },
 //            function(left, right) { return left.type < right.type },
 //            function(left, right) { return left.age < right.age },
 //            function(left, right) {
@@ -215,7 +245,7 @@ Page {
                 axes: [
                     DateTimeAxis {
                         id: dateTimeAxis
-                        format: "hh:mm"
+
                     },
                     ValueAxis {
                         id: valueAxis
