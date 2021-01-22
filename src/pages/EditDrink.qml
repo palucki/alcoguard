@@ -1,7 +1,7 @@
 import QtQuick 2.13
-import QtQuick.Controls 2.13
 import QtQml 2.13
 import QtQuick.Layouts 1.13
+import QtQuick.Controls 2.13
 
 Page {
 
@@ -12,13 +12,13 @@ Page {
     property date itemDateTime;
     property var drinkId : null;
     signal saveDrink;
-
+    property var beverages;
     function getDrink() {
         return {
             "id" : drinkId,
             "timestamp": selectedDate(),
-            "beverage" : "vodka",
-            "amount" : 50,
+            "beverage" : beverageCombo.currentText,
+            "amount" : amountSpinBox.value,
             "unit" : "ml"
         }
     }
@@ -165,7 +165,6 @@ Page {
         ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-
             Row {
                 id: timeRow
                 //                anchors.horizontalCenter: parent.horizontalCenter
@@ -210,7 +209,30 @@ Page {
                 }
             }
         }
+
+
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            SpinBox {
+                id: amountSpinBox
+                value: 50
+                stepSize: 5
+
+                textFromValue: function(value, locale) {
+                    return qsTr("%1 ml").arg(value);
+                }
+            }
+
+            ComboBox {
+                id: beverageCombo
+                model: beverages
+            }
+        }
+
+
     }
+
 
     ColumnLayout {
         anchors.bottom: parent.bottom

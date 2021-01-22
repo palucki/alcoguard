@@ -18,6 +18,8 @@ ApplicationWindow {
     property var sessionToken : ""
     property var currentDrinkId : 0;
 
+    property var usedBeverages: ["vodka", "beer", "wine", "whisky"]
+
     //    Settings {
     //        id: settingsId
     //        property string token: ""
@@ -74,6 +76,7 @@ ApplicationWindow {
         Alcometer {
             id: alcometerScreen
             sessionToken : root.sessionToken
+            beverages: usedBeverages
             onAddDrink: {
                 swipeView.currentIndex = 5
                 editDrink.drinkId = null;
@@ -83,6 +86,7 @@ ApplicationWindow {
 
         EditDrink {
             id: editDrink
+            beverages: usedBeverages
             onSaveDrink: {
                 swipeView.currentIndex = 4
 

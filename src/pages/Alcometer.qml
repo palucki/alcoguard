@@ -9,7 +9,7 @@ Page {
     property var sessionToken : ""
 //    property var drinkListModel ;
 //    property var drinkListDelegate;
-    property var beverages: ["vodka", "beer", "wine", "whisky"]
+    property var beverages;
     signal addDrink;
 
     function updateAxes() {
@@ -95,8 +95,9 @@ Page {
             //                height: 50
             Text {
                 //text: Qt.formatDateTime(Date.fromLocaleString(Qt.locale(), timestamp, "dd-MM-yyyy hh:mm"), "hh:mm") + " " + amount + unit + " of " + beverage;
+                id: textDelegate
                 text: Qt.formatDateTime(timestamp, "dddd hh:mm") + " " + amount + unit + " of " + beverage;
-                font.pixelSize: 24
+                font.pixelSize: 12
 
                 MouseArea {
                     anchors.fill: parent
@@ -108,21 +109,24 @@ Page {
                 }
             }
 
-            Button {
-                id: editOneButton
-                text: "Edit"
-                icon.source: "../../images/icons/edit.png"
-                onClicked: {
-                    swipeView.currentIndex = 5;
-                    editDrink.drinkId = drinkModel.get(index).id;
-                    editDrink.itemDateTime = drinkModel.get(index).timestamp;
-                }
-            }
+//            Button {
+//                id: editOneButton
+//                text: "Edit"
+////                icon.source: "../../images/icons/edit.png"
+////                icon.height: 15
+//                onClicked: {
+//                    swipeView.currentIndex = 5;
+//                    editDrink.drinkId = drinkModel.get(index).id;
+//                    editDrink.itemDateTime = drinkModel.get(index).timestamp;
+//                }
+//            }
 
             Button {
                 id: removeOneButton
+//                anchors.right: masterLayout.right
                 text: "Remove"
-                icon.source: "../../images/icons/remove.png"
+//                icon.source: "../../images/icons/remove.png"
+//                icon.height: 15
                 onClicked: {
                     drinkModel.remove(index);
                     updateGraph();
