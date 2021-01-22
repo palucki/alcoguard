@@ -39,10 +39,15 @@ Page {
         dateTimeAxis.min = mint;
         dateTimeAxis.max = maxt;
         dateTimeAxis.format = "hh:mm"
-        dateTimeAxis.tickCount = 10; //drinkSortedModel.items.count
+        var hoursRange = maxt.getHours() - mint.getHours();
+        dateTimeAxis.tickCount = hoursRange > 8 ? 8 : hoursRange; //drinkSortedModel.items.count
 
         valueAxis.min = 0;
-        valueAxis.max = drinkModel.count >= 15 ? drinkModel.count + 1 : 15;
+        valueAxis.max = drinkSortedModel.items.count + 1;
+        valueAxis.tickAnchor = 0;
+        valueAxis.tickType = ValueAxis.TicksDynamic;
+        valueAxis.tickInterval = 1;
+        valueAxis.labelFormat = "%d"
     }
 
     function updateGraph() {
@@ -90,7 +95,7 @@ Page {
             //                height: 50
             Text {
                 //text: Qt.formatDateTime(Date.fromLocaleString(Qt.locale(), timestamp, "dd-MM-yyyy hh:mm"), "hh:mm") + " " + amount + unit + " of " + beverage;
-                text: Qt.formatDateTime(timestamp, "hh:mm") + " " + amount + unit + " of " + beverage;
+                text: Qt.formatDateTime(timestamp, "dddd hh:mm") + " " + amount + unit + " of " + beverage;
                 font.pixelSize: 24
 
                 MouseArea {
@@ -120,6 +125,8 @@ Page {
                 icon.source: "../../images/icons/remove.png"
                 onClicked: {
                     drinkModel.remove(index);
+                    updateGraph();
+                    updateAxes();
                 }
             }
         }
@@ -127,6 +134,7 @@ Page {
 
     ListModel {
         id: drinkModel
+
 //        ListElement { timestamp: "13-12-2020 21:00"; beverage: "vodka"; amount: 50; unit: "ml" }
 //        ListElement { timestamp: "12-12-2020 21:10"; beverage: "vodka"; amount: 50; unit: "ml" }
 //        ListElement { timestamp: "12-12-2020 21:20"; beverage: "vodka"; amount: 50; unit: "ml" }
