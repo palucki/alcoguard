@@ -15,5 +15,6 @@
         <file>../images/icons/back.png</file>
         <file>../images/icons/edit.png</file>
         <file>pages/EditDrink.qml</file>
+        <file>pages/AppSettings.qml</file>
     </qresource>
 </RCC>

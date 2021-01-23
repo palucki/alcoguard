@@ -19,6 +19,7 @@ ApplicationWindow {
     property var currentDrinkId : 0;
 
     property var usedBeverages: ["vodka", "beer", "wine", "whisky"]
+    property var usedCurrencies: ["PLN", "USD", "EUR", "GBP"]
 
     //    Settings {
     //        id: settingsId
@@ -26,8 +27,8 @@ ApplicationWindow {
     //    }
 
     function find(model, criteria) {
-      for(var i = 0; i < model.count; ++i) if (criteria(model.get(i))) return i;
-      return null
+        for(var i = 0; i < model.count; ++i) if (criteria(model.get(i))) return i;
+        return null
     }
 
     Component.onCompleted: {
@@ -39,46 +40,46 @@ ApplicationWindow {
     }
 
     SwipeView {
-        property bool isInteractive : isInitialized && isLoggedIn
+//        property bool isInteractive : isInitialized && isLoggedIn
 
         id: swipeView
         anchors.fill: parent
-        //        currentIndex: currentIndex
-        //        interactive: isInteractive
+        currentIndex: tabBar.currentIndex
+        interactive: true
 
-        Splash {
-            id: splashScreen
-            RotationAnimator on rotation {
-                from: 0;
-                to: 360;
-                duration: splashScreenPeriod
-                loops: Animation.Infinite
-            }
-        }
+        //        Splash {
+        //            id: splashScreen
+        //            RotationAnimator on rotation {
+        //                from: 0;
+        //                to: 360;
+        //                duration: splashScreenPeriod
+        //                loops: Animation.Infinite
+        //            }
+        //        }
 
-        SignupForm {
-            id: signupForm
-        }
+        //        SignupForm {
+        //            id: signupForm
+        //        }
 
-        LoginForm {
-            id: loginScreen
-            onLoggedSuccessfully: {
-                root.sessionToken = loginScreen.sessionToken
-                console.log(sessionToken)
-            }
-        }
+        //        LoginForm {
+        //            id: loginScreen
+        //            onLoggedSuccessfully: {
+        //                root.sessionToken = loginScreen.sessionToken
+        //                console.log(sessionToken)
+        //            }
+        //        }
 
-        Welcome {
-            id: welcomeScreen
-            sessionToken : root.sessionToken
-        }
+        //        Welcome {
+        //            id: welcomeScreen
+        //            sessionToken : root.sessionToken
+        //        }
 
         Alcometer {
             id: alcometerScreen
             sessionToken : root.sessionToken
             beverages: usedBeverages
             onAddDrink: {
-                swipeView.currentIndex = 5
+                swipeView.currentIndex = 1
                 editDrink.drinkId = null;
                 editDrink.itemDateTime = new Date();
             }
@@ -88,47 +89,79 @@ ApplicationWindow {
             id: editDrink
             beverages: usedBeverages
             onSaveDrink: {
-                swipeView.currentIndex = 4
+                swipeView.currentIndex = 0
 
                 var drink = editDrink.getDrink();
                 alcometerScreen.saveDrink(drink);
             }
         }
 
-        Timer {
-            id: splashScreenTimer
-            interval: splashScreenDuration;
-            running: true;
-            repeat: false
-            onTriggered: {
-                console.log("Timeout")
-                //                swipeView.isInteractive = true
-                //                swipeView.removeItem(splashScreen)
-                isInitialized = true
-
-                console.log("Session token: " + sessionToken )
-                if(sessionToken !== "") {
-                    swipeView.currentIndex = 2
-                }
-
-            }
+        AppSettings {
+            id: settings
         }
+
+        //        Timer {
+        //            id: splashScreenTimer
+        //            interval: splashScreenDuration;
+        //            running: true;
+        //            repeat: false
+        //            onTriggered: {
+        //                console.log("Timeout")
+        //                //                swipeView.isInteractive = true
+        //                //                swipeView.removeItem(splashScreen)
+        //                isInitialized = true
+
+        //                console.log("Session token: " + sessionToken )
+        //                if(sessionToken !== "") {
+        //                    swipeView.currentIndex = 2
+        //                }
+
+        //            }
+        //        }
 
     }
 
 
 
-    //    footer: TabBar {
-    //        id: tabBar
+    footer: TabBar {
+        id: tabBar
 
-    //        visible: isInitialized && isLoggedIn
-    //        currentIndex: swipeView.currentIndex
+        visible: true
+        currentIndex: swipeView.currentIndex
 
-    ////        TabButton {
-    ////            text: qsTr("Login")
-    ////        }
-    //        TabButton {
-    //            text: qsTr("Home")
-    //        }
-    //    }
+        TabButton {
+            text: qsTr("Home")
+        }
+
+        TabButton {
+            contentItem: Item {
+                Column {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: 5
+                    Image {
+                        id: addImage
+                        source: "../../images/icons/add.png"
+                        width: 20
+                        height: 20
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    Text {
+                        text: qsTr("Add")
+                        //                        font: control.font
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: addImage.bottom
+                    }
+                }
+            }
+
+            //            text:
+            //            icon.source:
+        }
+
+        TabButton {
+            text: qsTr("Settings")
+        }
+
+
+    }
 }

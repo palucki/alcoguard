@@ -30,6 +30,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 ANDROID_ABIS = armeabi-v7a arm64-v8a x86
 
 DISTFILES += \
+    Settings.qml \
     android/AndroidManifest.xml \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.jar \
