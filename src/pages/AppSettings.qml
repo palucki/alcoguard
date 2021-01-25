@@ -4,13 +4,13 @@ import QtQuick.Controls 2.13
 
 Item {
 
-        Settings {
-            id: settings
-            property alias wireless: wirelessSwitch.checked
-            property alias bluetooth: bluetoothSwitch.checked
-            property alias contrast: contrastSlider.value
-            property alias brightness: brightnessSlider.value
-        }
+    Settings {
+        id: settings
+        property alias wireless: wirelessSwitch.checked
+        property alias bluetooth: bluetoothSwitch.checked
+        property alias contrast: contrastSlider.value
+        property alias brightness: brightnessSlider.value
+    }
 
     Column {
         anchors.centerIn: parent
@@ -18,10 +18,11 @@ Item {
 
         Row {
             spacing: 50
-            Image {
+            Text {
                 anchors.verticalCenter: parent.verticalCenter
-//                source: "images/bluetooth.png"
+                text: "Setting 1"
             }
+
             Switch {
                 id: bluetoothSwitch
                 anchors.verticalCenter: parent.verticalCenter
@@ -30,9 +31,9 @@ Item {
         }
         Row {
             spacing: 50
-            Image {
+            Text {
                 anchors.verticalCenter: parent.verticalCenter
-//                source: "images/wifi.png"
+                text: "Setting 2"
             }
             Switch {
                 id: wirelessSwitch
@@ -41,29 +42,30 @@ Item {
             }
         }
 
-        Column {
-            Image {
-                anchors.horizontalCenter: parent.horizontalCenter
-//                source: "images/brightness.png"
+        Row {
+            spacing:  50
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Setting 3"
             }
             Slider {
                 id: brightnessSlider
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.horizontalCenter: parent.verticalCenter
                 from: 0
                 to: 5
                 stepSize: 1
                 value: settings.brightness
             }
         }
-        Column {
-            spacing: 2
-            Image {
-                anchors.horizontalCenter: parent.horizontalCenter
-//                source: "images/contrast.png"
+        Row {
+            spacing:  50
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Setting 4"
             }
             Slider {
                 id: contrastSlider
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.horizontalCenter: parent.verticalCenter
                 from: 0
                 to: 10
                 stepSize: 1
