@@ -102,7 +102,7 @@ Page {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        swipeView.currentIndex = 5;
+//                        swipeView.currentIndex = main.ScreenIndex.Edit;
                         editDrink.drinkId = drinkModel.get(index).id;
                         editDrink.itemDateTime = drinkModel.get(index).timestamp;
                     }

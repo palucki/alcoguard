@@ -2,6 +2,7 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 import Qt.labs.settings 1.0
 import QtQuick.Layouts 1.13
+import QtQuick.Controls.Styles 1.4
 
 ApplicationWindow {
     id: root
@@ -26,6 +27,14 @@ ApplicationWindow {
         return null
     }
 
+    //    enum ScreenIndex {
+    //        Home,
+    //        Calendar,
+    //        Edit,
+    //        Stats,
+    //        Settings
+    //    }
+
     Component.onCompleted: {
 
     }
@@ -35,7 +44,7 @@ ApplicationWindow {
     }
 
     SwipeView {
-//        property bool isInteractive : isInitialized && isLoggedIn
+        //        property bool isInteractive : isInitialized && isLoggedIn
 
         id: swipeView
         anchors.fill: parent
@@ -69,16 +78,12 @@ ApplicationWindow {
         //            sessionToken : root.sessionToken
         //        }
 
-        HomeScreen {
-            id: alcometerScreen
-            sessionToken : root.sessionToken
-            beverages: usedBeverages
-            onAddDrink: {
-                swipeView.currentIndex = 2
-                editDrink.drinkId = null;
-                editDrink.itemDateTime = new Date();
-            }
+        Item {
+            id: homeScreen
+
+
         }
+
 
         CalendarScreen {
             id: calendarScreen
@@ -88,12 +93,24 @@ ApplicationWindow {
             id: editDrink
             beverages: usedBeverages
             onSaveDrink: {
-                swipeView.currentIndex = 1
+                //                swipeView.currentIndex = main.ScreenIndex.Home
 
                 var drink = editDrink.getDrink();
                 alcometerScreen.saveDrink(drink);
             }
         }
+
+        StatsScreen {
+            id: alcometerScreen
+            sessionToken : root.sessionToken
+            beverages: usedBeverages
+            onAddDrink: {
+                //                swipeView.currentIndex = main.ScreenIndex.Edit
+                editDrink.drinkId = null;
+                editDrink.itemDateTime = new Date();
+            }
+        }
+
 
         SettingsScreen {
             id: settings
