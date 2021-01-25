@@ -6,6 +6,8 @@ function dbInit() {
     db.transaction( function(tx) {
         print('... create table')
         tx.executeSql('CREATE TABLE IF NOT EXISTS users(name TEXT, password TEXT)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS users(name TEXT, password TEXT)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS users(name TEXT, password TEXT)');
     });
 
 }

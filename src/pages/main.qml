@@ -21,11 +21,6 @@ ApplicationWindow {
     property var usedBeverages: ["vodka", "beer", "wine", "whisky"]
     property var usedCurrencies: ["PLN", "USD", "EUR", "GBP"]
 
-    //    Settings {
-    //        id: settingsId
-    //        property string token: ""
-    //    }
-
     function find(model, criteria) {
         for(var i = 0; i < model.count; ++i) if (criteria(model.get(i))) return i;
         return null
@@ -74,29 +69,33 @@ ApplicationWindow {
         //            sessionToken : root.sessionToken
         //        }
 
-        Alcometer {
+        HomeScreen {
             id: alcometerScreen
             sessionToken : root.sessionToken
             beverages: usedBeverages
             onAddDrink: {
-                swipeView.currentIndex = 1
+                swipeView.currentIndex = 2
                 editDrink.drinkId = null;
                 editDrink.itemDateTime = new Date();
             }
         }
 
-        EditDrink {
+        CalendarScreen {
+            id: calendarScreen
+        }
+
+        EditDrinkScreen {
             id: editDrink
             beverages: usedBeverages
             onSaveDrink: {
-                swipeView.currentIndex = 0
+                swipeView.currentIndex = 1
 
                 var drink = editDrink.getDrink();
                 alcometerScreen.saveDrink(drink);
             }
         }
 
-        AppSettings {
+        SettingsScreen {
             id: settings
         }
 
@@ -134,6 +133,10 @@ ApplicationWindow {
         }
 
         TabButton {
+            text: qsTr("Calendar")
+        }
+
+        TabButton {
             contentItem: Item {
                 Column {
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -156,6 +159,10 @@ ApplicationWindow {
 
             //            text:
             //            icon.source:
+        }
+
+        TabButton {
+            text: qsTr("Stats")
         }
 
         TabButton {
