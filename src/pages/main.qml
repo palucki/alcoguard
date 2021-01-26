@@ -145,45 +145,34 @@ ApplicationWindow {
         visible: true
         currentIndex: swipeView.currentIndex
 
-        TabButton {
-            text: qsTr("Home")
+        TabButtonWithIcon {
+            buttonText: qsTr("Home")
+            buttonSize: 20
+            iconSource: "../../images/icons/home.png"
         }
 
-        TabButton {
-            text: qsTr("Calendar")
+        TabButtonWithIcon {
+            buttonText: qsTr("Calendar")
+            buttonSize: 20
+            iconSource: "../../images/icons/calendar.png"
         }
 
-        TabButton {
-            contentItem: Item {
-                Column {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    spacing: 5
-                    Image {
-                        id: addImage
-                        source: "../../images/icons/add.png"
-                        width: 20
-                        height: 20
-                        anchors.horizontalCenter: parent.horizontalCenter
-                    }
-                    Text {
-                        text: qsTr("Add")
-                        //                        font: control.font
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: addImage.bottom
-                    }
-                }
-            }
-
-            //            text:
-            //            icon.source:
+        TabButtonWithIcon {
+            buttonText: qsTr("Add")
+            buttonSize: 20
+            iconSource: "../../images/icons/add.png"
         }
 
-        TabButton {
-            text: qsTr("Stats")
+        TabButtonWithIcon {
+            buttonText: qsTr("Stats")
+            buttonSize: 20
+            iconSource: "../../images/icons/stats.png"
         }
 
-        TabButton {
-            text: qsTr("Settings")
+        TabButtonWithIcon {
+            buttonText: qsTr("Settings")
+            buttonSize: 20
+            iconSource: "../../images/icons/settings.png"
         }
 
 

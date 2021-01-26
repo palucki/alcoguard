@@ -17,5 +17,10 @@
         <file>pages/EditDrinkScreen.qml</file>
         <file>pages/SettingsScreen.qml</file>
         <file>pages/CalendarScreen.qml</file>
+        <file>../images/icons/calendar.png</file>
+        <file>../images/icons/home.png</file>
+        <file>../images/icons/settings.png</file>
+        <file>../images/icons/stats.png</file>
+        <file>pages/TabButtonWithIcon.qml</file>
     </qresource>
 </RCC>
