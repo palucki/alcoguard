@@ -5,6 +5,10 @@ import QtCharts 2.15
 //import QtQml 2.15
 import QtQml.Models 2.13
 
+import QtQuick.LocalStorage 2.13
+
+import "../Database.js" as DB
+
 Page {
     property var sessionToken : ""
 //    property var drinkListModel ;
@@ -12,20 +16,13 @@ Page {
     property var beverages;
     signal addDrink;
 
+    Component.onCompleted: {
+        DB.dbInit()
+    }
+
     function updateAxes() {
-//        var mint =  new Date();
-//        var maxt =  new Date(1970, 0, 1);
-
-//        for(var j = 0; j < drinkModel.count; j ++)
-//        {
-//            mint = (mint > drinkModel.get(j).timestamp ? drinkModel.get(j).timestamp : mint);
-//            maxt = (maxt < drinkModel.get(j).timestamp ? drinkModel.get(j).timestamp : maxt);
-//        }
-
-//        for(var j = 0; j < drinkSortedModel.items.count; j ++)
-//        {
-//            console.log(drinkSortedModel.items.get(j).model.timestamp)
-//        }
+        if(drinkSortedModel.items.count == 0)
+            return;
 
         var mint = drinkSortedModel.items.get(0).model.timestamp;
         var maxt = drinkSortedModel.items.get(drinkSortedModel.items.count - 1).model.timestamp
@@ -70,20 +67,23 @@ Page {
     }
 
     function saveDrink(drink) {
-        if(drink.id === null)
-        {
-            drink.id = currentDrinkId++;
-            drinkModel.append(drink)
-        }
-        else
-        {
-            console.log(drink.id, drink.timestamp)
-            var index = find(drinkModel, function(item) { return item.id === drink.id })
+        DB.saveDrink(drink)
+
+        console.log(drink.id, drink.timestamp)
+        var index = find(drinkModel, function(item) { return item.id === drink.id })
+        if(index !== null)
             drinkModel.remove(index);
-            drinkModel.append(drink);
-//            drinkModel.set(index, drink);
-//            drinkSortedModel.sort(drinkSortedModel.lessThan[0]);
-        }
+        drinkModel.append(drink);
+
+        updateGraph()
+        updateAxes();
+    }
+
+    function removeDrink(id, index) {
+        DB.deleteDrink(id)
+
+        if(index !== null)
+            drinkModel.remove(index);
 
         updateGraph()
         updateAxes();
@@ -128,9 +128,7 @@ Page {
 //                icon.source: "../../images/icons/remove.png"
 //                icon.height: 15
                 onClicked: {
-                    drinkModel.remove(index);
-                    updateGraph();
-                    updateAxes();
+                    removeDrink(drinkModel.get(index).id, index);
                 }
             }
         }

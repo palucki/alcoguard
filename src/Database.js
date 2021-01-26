@@ -1,38 +1,43 @@
 function dbInit() {
-    console.log("Initializing database");
-
-    db = LocalStorage.openDatabaseSync("sqlitedemodb", "1.0", "DemoDatabase", 100000);
-
-    db.transaction( function(tx) {
-        print('... create table')
-        tx.executeSql('CREATE TABLE IF NOT EXISTS users(name TEXT, password TEXT)');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS users(name TEXT, password TEXT)');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS users(name TEXT, password TEXT)');
-    });
-
+    console.log("Opening database");
+    db = LocalStorage.openDatabaseSync("drinks", "1.0", "DrinksDatabase", 100000);
 }
 
-function addUser(){
-    console.log("Storing data...")
+function saveDrink(drink) {
+    console.log("Adding drink...")
 
-    if(!db || login.text === "" || password.text === "")
+    if(!db)
         return;
 
     db.transaction(function(tx){
-        var result = tx.executeSql("SELECT * FROM users WHERE name = '%1'".arg(login.text));
+        var result = tx.executeSql("SELECT id FROM drink WHERE id = %1".arg(drink.id));
 
         if(result.rows.length === 1) {
-            //update
-            console.log("Updating the user %1".arg(login.text));
+            tx.executeSql('UPDATE drink SET beverage_id = ?, amount_ml = ?, consumed = ? WHERE id = ?',
+                          [1, drink.amount, drink.timestamp, drink.id]);
         }
         else {
-            console.log("Inserting the user %1".arg(login.text));
-            tx.executeSql('INSERT INTO users VALUES (?,?)',[login.text, password.text]);
+            result = tx.executeSql('INSERT INTO drink (beverage_id, amount_ml, consumed) VALUES (?,?,?)',
+                          [1, drink.amount, drink.timestamp]);
+            drink.id = result.insertId;
         }
-
     });
+
+    console.log("Drink added. Id: " + drink.id)
 }
 
+function deleteDrink(id) {
+    console.log("Deleting drink. Id: " + id)
+
+    if(!db)
+        return;
+
+    db.transaction(function(tx){
+        var result = tx.executeSql("DELETE FROM drink WHERE id = %1".arg(id));
+    });
+
+    console.log("Drink deleted")
+}
 
 function loginUser() {
     console.log("Storing data...")
@@ -50,17 +55,17 @@ function loginUser() {
             if(dbPass === password.text) {
                 console.log("Login successful")
                 isLoggedIn = true;
-//                loggedUser.loggedText = "Logged as " + login.text;
-//                return true;
+                //                loggedUser.loggedText = "Logged as " + login.text;
+                //                return true;
             }
             else {
                 console.log("Login failed - incorrect password")
                 console.log(dbPass)
                 isLoggedIn = false;
-//                loggedUser.loggedText = "Unauthorized";
+                //                loggedUser.loggedText = "Unauthorized";
             }
 
-//            return false;
+            //            return false;
         }
         else {
             console.log("No such user: %1".arg(login.text));

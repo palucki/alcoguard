@@ -3,6 +3,7 @@ import QtQml 2.13
 import QtQuick.Layouts 1.13
 import QtQuick.Controls 2.13
 
+
 Page {
 
     property var visibleTimeItems : 6
