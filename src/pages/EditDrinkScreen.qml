@@ -14,6 +14,9 @@ Page {
     property var drinkId : null;
     signal saveDrink;
     property var beverages;
+
+    property var returnToIndex : homePageIndex;
+
     function getDrink() {
         return {
             "id" : parseInt(drinkId),
@@ -246,7 +249,9 @@ Page {
                 Layout.preferredWidth: 150
                 text: "Save"
                 icon.source: "../../images/icons/add.png"
-                onClicked: saveDrink()
+                onClicked: {
+                    saveDrink()
+                }
             }
         }
     }

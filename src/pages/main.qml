@@ -54,6 +54,11 @@ ApplicationWindow {
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
+        onCurrentIndexChanged: {
+            if(currentIndex !== root.addDrinkPageIndex)
+                editDrink.returnToIndex = currentIndex;
+        }
+
         //        Splash {
         //            id: splashScreen
         //            RotationAnimator on rotation {
@@ -99,6 +104,8 @@ ApplicationWindow {
             onSaveDrink: {
                 var drink = editDrink.getDrink();
                 alcometerScreen.saveDrink(drink);
+                console.log("Returning to " + editDrink.returnToIndex)
+                swipeView.setCurrentIndex(editDrink.returnToIndex)
             }
         }
 
@@ -164,6 +171,10 @@ ApplicationWindow {
             buttonText: qsTr("Add")
             buttonSize: 20
             iconSource: "../../images/icons/add.png"
+            onClicked: {
+                editDrink.drinkId = null;
+                editDrink.itemDateTime = new Date();
+            }
         }
 
         TabButtonWithIcon {
