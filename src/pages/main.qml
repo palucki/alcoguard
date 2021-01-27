@@ -22,18 +22,22 @@ ApplicationWindow {
     property var usedBeverages: ["vodka", "beer", "wine", "whisky"]
     property var usedCurrencies: ["PLN", "USD", "EUR", "GBP"]
 
+    readonly property int homePageIndex : 0;
+    readonly property int calendarPageIndex : 1;
+    readonly property int addDrinkPageIndex : 2;
+    readonly property int statsPageIndex : 3;
+    readonly property int settingsPageIndex : 4;
+
     function find(model, criteria) {
         for(var i = 0; i < model.count; ++i) if (criteria(model.get(i))) return i;
         return null
     }
 
-    //    enum ScreenIndex {
-    //        Home,
-    //        Calendar,
-    //        Edit,
-    //        Stats,
-    //        Settings
-    //    }
+    function addNewDrink() {
+        swipeView.setCurrentIndex(root.addDrinkPageIndex);
+        editDrink.drinkId = null;
+        editDrink.itemDateTime = new Date();
+    }
 
     Component.onCompleted: {
 
@@ -49,7 +53,6 @@ ApplicationWindow {
         id: swipeView
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
-        interactive: true
 
         //        Splash {
         //            id: splashScreen
@@ -80,7 +83,8 @@ ApplicationWindow {
 
         Item {
             id: homeScreen
-
+            AddDrinkButton {
+            }
 
         }
 
@@ -93,8 +97,6 @@ ApplicationWindow {
             id: editDrink
             beverages: usedBeverages
             onSaveDrink: {
-                //                swipeView.currentIndex = main.ScreenIndex.Home
-
                 var drink = editDrink.getDrink();
                 alcometerScreen.saveDrink(drink);
             }
@@ -104,11 +106,6 @@ ApplicationWindow {
             id: alcometerScreen
             sessionToken : root.sessionToken
             beverages: usedBeverages
-            onAddDrink: {
-                //                swipeView.currentIndex = main.ScreenIndex.Edit
-                editDrink.drinkId = null;
-                editDrink.itemDateTime = new Date();
-            }
         }
 
 
@@ -145,6 +142,12 @@ ApplicationWindow {
         visible: true
         currentIndex: swipeView.currentIndex
 
+        onCurrentIndexChanged: {
+            console.log("Tab bar index: " + currentIndex)
+        }
+
+
+
         TabButtonWithIcon {
             buttonText: qsTr("Home")
             buttonSize: 20
@@ -174,7 +177,5 @@ ApplicationWindow {
             buttonSize: 20
             iconSource: "../../images/icons/settings.png"
         }
-
-
     }
 }

@@ -11,13 +11,15 @@ import "../Database.js" as DB
 
 Page {
     property var sessionToken : ""
-//    property var drinkListModel ;
-//    property var drinkListDelegate;
+    //    property var drinkListModel ;
+    //    property var drinkListDelegate;
     property var beverages;
-    signal addDrink;
+    //    signal addNewDrink;
 
     Component.onCompleted: {
         DB.dbInit()
+
+        loadDrinks()
     }
 
     function updateAxes() {
@@ -57,13 +59,28 @@ Page {
             var x = drinkSortedModel.items.get(j).model.timestamp;
             var y = j+1;
             series.append(x, y);
-//            console.log(x)
+            //            console.log(x)
         }
     }
 
     function toMsecsSinceEpoch(date) {
         var msecs = date.getTime();
         return msecs;
+    }
+
+    function loadDrinks() {
+        var drinks = DB.loadDrinks();
+
+        for(var i = 0; i < drinks.length; i++) {
+            addDrink(drinks[i]);
+        }
+
+        updateGraph()
+        updateAxes();
+    }
+
+    function addDrink(drink) {
+        drinkModel.append(drink);
     }
 
     function saveDrink(drink) {
@@ -73,7 +90,7 @@ Page {
         var index = find(drinkModel, function(item) { return item.id === drink.id })
         if(index !== null)
             drinkModel.remove(index);
-        drinkModel.append(drink);
+        addDrink(drink);
 
         updateGraph()
         updateAxes();
@@ -102,31 +119,31 @@ Page {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-//                        swipeView.currentIndex = main.ScreenIndex.Edit;
+                        //                        swipeView.currentIndex = main.ScreenIndex.Edit;
                         editDrink.drinkId = drinkModel.get(index).id;
                         editDrink.itemDateTime = drinkModel.get(index).timestamp;
                     }
                 }
             }
 
-//            Button {
-//                id: editOneButton
-//                text: "Edit"
-////                icon.source: "../../images/icons/edit.png"
-////                icon.height: 15
-//                onClicked: {
-//                    swipeView.currentIndex = 5;
-//                    editDrink.drinkId = drinkModel.get(index).id;
-//                    editDrink.itemDateTime = drinkModel.get(index).timestamp;
-//                }
-//            }
+            //            Button {
+            //                id: editOneButton
+            //                text: "Edit"
+            ////                icon.source: "../../images/icons/edit.png"
+            ////                icon.height: 15
+            //                onClicked: {
+            //                    swipeView.currentIndex = 5;
+            //                    editDrink.drinkId = drinkModel.get(index).id;
+            //                    editDrink.itemDateTime = drinkModel.get(index).timestamp;
+            //                }
+            //            }
 
             Button {
                 id: removeOneButton
-//                anchors.right: masterLayout.right
+                //                anchors.right: masterLayout.right
                 text: "Remove"
-//                icon.source: "../../images/icons/remove.png"
-//                icon.height: 15
+                //                icon.source: "../../images/icons/remove.png"
+                //                icon.height: 15
                 onClicked: {
                     removeDrink(drinkModel.get(index).id, index);
                 }
@@ -137,11 +154,11 @@ Page {
     ListModel {
         id: drinkModel
 
-//        ListElement { timestamp: "13-12-2020 21:00"; beverage: "vodka"; amount: 50; unit: "ml" }
-//        ListElement { timestamp: "12-12-2020 21:10"; beverage: "vodka"; amount: 50; unit: "ml" }
-//        ListElement { timestamp: "12-12-2020 21:20"; beverage: "vodka"; amount: 50; unit: "ml" }
-//        ListElement { timestamp: "12-12-2020 21:30"; beverage: "vodka"; amount: 50; unit: "ml" }
-//        ListElement { timestamp: "12-12-2020 21:40"; beverage: "vodka"; amount: 50; unit: "ml" }
+        //        ListElement { timestamp: "13-12-2020 21:00"; beverage: "vodka"; amount: 50; unit: "ml" }
+        //        ListElement { timestamp: "12-12-2020 21:10"; beverage: "vodka"; amount: 50; unit: "ml" }
+        //        ListElement { timestamp: "12-12-2020 21:20"; beverage: "vodka"; amount: 50; unit: "ml" }
+        //        ListElement { timestamp: "12-12-2020 21:30"; beverage: "vodka"; amount: 50; unit: "ml" }
+        //        ListElement { timestamp: "12-12-2020 21:40"; beverage: "vodka"; amount: 50; unit: "ml" }
     }
 
     DelegateModel {
@@ -150,25 +167,25 @@ Page {
             function(left, right) {
                 return left.timestamp < right.timestamp
             },
-//            function(left, right) { return left.type < right.type },
-//            function(left, right) { return left.age < right.age },
-//            function(left, right) {
-//                if (left.size == "Small")
-//                    return true
-//                else if (right.size == "Small")
-//                    return false
-//                else if (left.size == "Medium")
-//                    return true
-//                else
-//                    return false
-//            }
+            //            function(left, right) { return left.type < right.type },
+            //            function(left, right) { return left.age < right.age },
+            //            function(left, right) {
+            //                if (left.size == "Small")
+            //                    return true
+            //                else if (right.size == "Small")
+            //                    return false
+            //                else if (left.size == "Medium")
+            //                    return true
+            //                else
+            //                    return false
+            //            }
         ]
 
         property int sortOrder: 0; //orderSelector.selectedIndex
         onSortOrderChanged: items.setGroups(0, items.count, "unsorted")
 
-//![6]
-//![3]
+        //![6]
+        //![3]
         function insertPosition(lessThan, item) {
             var lower = 0
             var upper = items.count
@@ -194,31 +211,34 @@ Page {
                 items.move(item.itemsIndex, index)
             }
         }
-//![3]
+        //![3]
 
-//![1]
+        //![1]
         items.includeByDefault: false
-//![5]
+        //![5]
         groups: DelegateModelGroup {
             id: unsortedItems
             name: "unsorted"
 
             includeByDefault: true
-//![1]
+            //![1]
             onChanged: {
                 if (drinkSortedModel.sortOrder == drinkSortedModel.lessThan.length)
                     setGroups(0, count, "items")
                 else
                     drinkSortedModel.sort(drinkSortedModel.lessThan[0])
             }
-//![2]
+            //![2]
         }
-//![2]
-//![5]
+        //![2]
+        //![5]
         model: drinkModel
         delegate: drinkDelegate
     }
 
+
+    AddDrinkButton {
+    }
 
     ColumnLayout {
         id: masterLayout
@@ -268,29 +288,29 @@ Page {
 
         ColumnLayout {
             Layout.alignment: Qt.AlignCenter
-//            ListView {
-//                id: alcoListId
-                //            anchors.top: chartViewId.bottom
-//                Layout.alignment: Qt.AlignHCenter
-//                Layout.preferredWidth: masterLayout.width
-//                Layout.preferredHeight: 0.3 * masterLayout.height
-////                Layout.fillHeight: true
+            //            ListView {
+            //                id: alcoListId
+            //            anchors.top: chartViewId.bottom
+            //                Layout.alignment: Qt.AlignHCenter
+            //                Layout.preferredWidth: masterLayout.width
+            //                Layout.preferredHeight: 0.3 * masterLayout.height
+            ////                Layout.fillHeight: true
 
-//                clip: true
-//                model: drinkSortedModel
-//                delegate: drinkListDelegate
-//                ScrollBar.vertical: ScrollBar { id: scrollBarId}
-//            }
+            //                clip: true
+            //                model: drinkSortedModel
+            //                delegate: drinkListDelegate
+            //                ScrollBar.vertical: ScrollBar { id: scrollBarId}
+            //            }
 
             ListView {
                 id: alcoListId
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: masterLayout.width
                 Layout.preferredHeight: 0.6 * masterLayout.height
-//                anchors {
-//                    left: parent.left; top: parent.top; right: parent.right;// bottom: orderSelector.top;
-//                    margins: 2
-//                }
+                //                anchors {
+                //                    left: parent.left; top: parent.top; right: parent.right;// bottom: orderSelector.top;
+                //                    margins: 2
+                //                }
                 clip: true
                 model: drinkSortedModel
                 ScrollBar.vertical: ScrollBar { id: scrollBarId}
@@ -301,18 +321,5 @@ Page {
 
         }
 
-
-        ColumnLayout{
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-            Button {
-                id: addButtonOptions
-                Layout.preferredHeight: 50
-                Layout.preferredWidth: 150
-                Layout.alignment: Qt.AlignHCenter
-                text: "Add"
-                icon.source: "../../images/icons/add.png"
-                onClicked: addDrink()
-            }
-        }
     }
 }

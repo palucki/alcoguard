@@ -22,5 +22,6 @@
         <file>../images/icons/settings.png</file>
         <file>../images/icons/stats.png</file>
         <file>pages/TabButtonWithIcon.qml</file>
+        <file>pages/AddDrinkButton.qml</file>
     </qresource>
 </RCC>
