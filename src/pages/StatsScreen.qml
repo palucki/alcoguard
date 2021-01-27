@@ -13,7 +13,6 @@ Page {
     property var sessionToken : ""
     //    property var drinkListModel ;
     //    property var drinkListDelegate;
-    property var beverages;
     //    signal addNewDrink;
 
     Component.onCompleted: {
@@ -51,7 +50,7 @@ Page {
     function updateGraph() {
         chartViewId.removeAllSeries();
 
-        var series = chartViewId.createSeries(ChartView.SeriesTypeLine, beverages[0], dateTimeAxis, valueAxis);
+        var series = chartViewId.createSeries(ChartView.SeriesTypeLine, root.usedBeverages[0].name, dateTimeAxis, valueAxis);
 
         for(var j = 0; j < drinkSortedModel.items.count; j ++)
         {

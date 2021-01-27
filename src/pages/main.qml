@@ -4,6 +4,9 @@ import Qt.labs.settings 1.0
 import QtQuick.Layouts 1.13
 import QtQuick.Controls.Styles 1.4
 
+import QtQuick.LocalStorage 2.13
+import "../Database.js" as DB
+
 ApplicationWindow {
     id: root
     visible: true
@@ -40,7 +43,10 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-
+        DB.dbInit();
+        var beverages = DB.loadBeverages();
+        if(beverages.length > 0)
+            root.usedBeverages = beverages
     }
 
     onIsLoggedInChanged: {
@@ -100,7 +106,6 @@ ApplicationWindow {
 
         EditDrinkScreen {
             id: editDrink
-            beverages: usedBeverages
             onSaveDrink: {
                 var drink = editDrink.getDrink();
                 alcometerScreen.saveDrink(drink);
@@ -112,7 +117,6 @@ ApplicationWindow {
         StatsScreen {
             id: alcometerScreen
             sessionToken : root.sessionToken
-            beverages: usedBeverages
         }
 
 

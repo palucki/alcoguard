@@ -13,7 +13,6 @@ Page {
     property date itemDateTime;
     property var drinkId : null;
     signal saveDrink;
-    property var beverages;
 
     property var returnToIndex : homePageIndex;
 
@@ -230,7 +229,8 @@ Page {
 
             ComboBox {
                 id: beverageCombo
-                model: beverages
+                model: root.usedBeverages
+                textRole: "name"
             }
         }
 

@@ -3,6 +3,27 @@ function dbInit() {
     db = LocalStorage.openDatabaseSync("drinks", "1.0", "DrinksDatabase", 100000);
 }
 
+function loadBeverages() {
+    if(!db)
+        return;
+
+    var beverages = [];
+
+    db.transaction(function(tx){
+        var result = tx.executeSql("SELECT * FROM beverage ORDER BY id");
+
+        for(var i = 0; i < result.rows.length; i++) {
+            var beverage = {
+                "id" : parseInt(result.rows.item(i).id),
+                "name": result.rows.item(i).name
+            }
+            beverages.push(result.rows.item(i));
+        }
+    });
+
+    return beverages;
+}
+
 function loadDrinks() {
     if(!db)
         return;
