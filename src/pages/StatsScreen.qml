@@ -18,7 +18,6 @@ Page {
 
     Component.onCompleted: {
         DB.dbInit()
-
         loadDrinks()
     }
 
@@ -153,12 +152,6 @@ Page {
 
     ListModel {
         id: drinkModel
-
-        //        ListElement { timestamp: "13-12-2020 21:00"; beverage: "vodka"; amount: 50; unit: "ml" }
-        //        ListElement { timestamp: "12-12-2020 21:10"; beverage: "vodka"; amount: 50; unit: "ml" }
-        //        ListElement { timestamp: "12-12-2020 21:20"; beverage: "vodka"; amount: 50; unit: "ml" }
-        //        ListElement { timestamp: "12-12-2020 21:30"; beverage: "vodka"; amount: 50; unit: "ml" }
-        //        ListElement { timestamp: "12-12-2020 21:40"; beverage: "vodka"; amount: 50; unit: "ml" }
     }
 
     DelegateModel {

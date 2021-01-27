@@ -16,7 +16,7 @@ Page {
     property var beverages;
     function getDrink() {
         return {
-            "id" : drinkId,
+            "id" : parseInt(drinkId),
             "timestamp": selectedDate(),
             "beverage" : beverageCombo.currentText,
             "amount" : amountSpinBox.value,

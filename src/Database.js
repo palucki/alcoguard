@@ -3,6 +3,32 @@ function dbInit() {
     db = LocalStorage.openDatabaseSync("drinks", "1.0", "DrinksDatabase", 100000);
 }
 
+function loadDrinks() {
+    if(!db)
+        return;
+
+    var drinks = [];
+
+    db.transaction(function(tx){
+        var result = tx.executeSql("SELECT * FROM drink");
+
+        for(var i = 0; i < result.rows.length; i++) {
+            var drink = {
+                "id" : parseInt(result.rows.item(i).id),
+                "timestamp": new Date(result.rows.item(i).consumed),
+                "beverageId" : 1,
+                "beverage" : "vodka",
+                "amount" : parseInt(result.rows.item(i).amount_ml),
+                "unit" : "ml"
+            }
+
+            drinks.push(drink);
+        }
+    });
+
+    return drinks;
+}
+
 function saveDrink(drink) {
     console.log("Adding drink...")
 
@@ -10,16 +36,16 @@ function saveDrink(drink) {
         return;
 
     db.transaction(function(tx){
-        var result = tx.executeSql("SELECT id FROM drink WHERE id = %1".arg(drink.id));
+        var result = tx.executeSql("SELECT id FROM drink WHERE id = ?", [drink.id]);
 
         if(result.rows.length === 1) {
             tx.executeSql('UPDATE drink SET beverage_id = ?, amount_ml = ?, consumed = ? WHERE id = ?',
-                          [1, drink.amount, drink.timestamp, drink.id]);
+                          [1, drink.amount, drink.timestamp.toISOString(), drink.id]);
         }
         else {
             result = tx.executeSql('INSERT INTO drink (beverage_id, amount_ml, consumed) VALUES (?,?,?)',
-                          [1, drink.amount, drink.timestamp]);
-            drink.id = result.insertId;
+                                   [1, drink.amount, drink.timestamp]);
+            drink.id = parseInt(result.insertId);
         }
     });
 
