@@ -23,5 +23,6 @@
         <file>../images/icons/stats.png</file>
         <file>pages/TabButtonWithIcon.qml</file>
         <file>pages/AddDrinkButton.qml</file>
+        <file>../images/icons/delete.png</file>
     </qresource>
 </RCC>

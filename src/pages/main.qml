@@ -4,8 +4,7 @@ import Qt.labs.settings 1.0
 import QtQuick.Layouts 1.13
 import QtQuick.Controls.Styles 1.4
 
-import QtQuick.LocalStorage 2.13
-import "../Database.js" as DB
+
 
 ApplicationWindow {
     id: root
@@ -22,7 +21,7 @@ ApplicationWindow {
     property var sessionToken : ""
     property var currentDrinkId : 0;
 
-    property var usedBeverages: ["vodka", "beer", "wine", "whisky"]
+    property var usedBeverages;// ["vodka", "beer", "wine", "whisky"]
     property var usedCurrencies: ["PLN", "USD", "EUR", "GBP"]
 
     readonly property int homePageIndex : 0;
@@ -42,12 +41,7 @@ ApplicationWindow {
         editDrink.itemDateTime = new Date();
     }
 
-    Component.onCompleted: {
-        DB.dbInit();
-        var beverages = DB.loadBeverages();
-        if(beverages.length > 0)
-            root.usedBeverages = beverages
-    }
+
 
     onIsLoggedInChanged: {
         //        swipeView.removeItem(loginScreen);

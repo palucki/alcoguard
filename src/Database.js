@@ -3,6 +3,25 @@ function dbInit() {
     db = LocalStorage.openDatabaseSync("drinks", "1.0", "DrinksDatabase", 100000);
 }
 
+function saveBeverage(beverage) {
+    if(!db)
+        return;
+
+    db.transaction(function(tx){
+        var result = tx.executeSql("SELECT id FROM beverage WHERE id = ?", [beverage.id]);
+
+        if(result.rows.length === 1) {
+            tx.executeSql('UPDATE beverage SET name = ? WHERE id = ?',
+                          [beverage.name, beverage.id]);
+        }
+        else {
+            result = tx.executeSql('INSERT INTO beverage (name) VALUES (?)',
+                                   [beverage.name]);
+            beverage.id = parseInt(result.insertId);
+        }
+    });
+}
+
 function loadBeverages() {
     if(!db)
         return;
