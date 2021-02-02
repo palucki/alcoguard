@@ -118,6 +118,7 @@ Page {
                     anchors.fill: parent
                     onClicked: {
                         //                        swipeView.currentIndex = main.ScreenIndex.Edit;
+                        swipeView.setCurrentIndex(root.addDrinkPageIndex);
                         editDrink.drinkId = drinkModel.get(index).id;
                         editDrink.itemDateTime = drinkModel.get(index).timestamp;
                     }

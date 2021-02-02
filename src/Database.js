@@ -63,14 +63,16 @@ function loadDrinks() {
     var drinks = [];
 
     db.transaction(function(tx){
-        var result = tx.executeSql("SELECT * FROM drink");
+        var result = tx.executeSql("SELECT d.id, beverage_id, b.name AS beverage_name, amount_ml, consumed FROM drink AS d LEFT JOIN beverage AS b on d.beverage_id = b.id;");
 
         for(var i = 0; i < result.rows.length; i++) {
+            var res = result.rows.item(i);
+
             var drink = {
                 "id" : parseInt(result.rows.item(i).id),
                 "timestamp": new Date(result.rows.item(i).consumed),
-                "beverageId" : 1,
-                "beverage" : "vodka",
+                "beverageId" : result.rows.item(i).beverage_id,
+                "beverage" : result.rows.item(i).beverage_name,
                 "amount" : parseInt(result.rows.item(i).amount_ml),
                 "unit" : "ml"
             }
@@ -93,11 +95,11 @@ function saveDrink(drink) {
 
         if(result.rows.length === 1) {
             tx.executeSql('UPDATE drink SET beverage_id = ?, amount_ml = ?, consumed = ? WHERE id = ?',
-                          [1, drink.amount, drink.timestamp.toISOString(), drink.id]);
+                          [drink.beverage_id, drink.amount, drink.timestamp.toISOString(), drink.id]);
         }
         else {
             result = tx.executeSql('INSERT INTO drink (beverage_id, amount_ml, consumed) VALUES (?,?,?)',
-                                   [1, drink.amount, drink.timestamp]);
+                                   [drink.beverage_id, drink.amount, drink.timestamp]);
             drink.id = parseInt(result.insertId);
         }
     });

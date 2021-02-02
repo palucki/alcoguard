@@ -26,6 +26,7 @@ Page {
         return {
             "id" : parseInt(drinkId),
             "timestamp": selectedDate(),
+            "beverage_id" : beverageCombo.model[beverageCombo.currentIndex].id,
             "beverage" : beverageCombo.currentText,
             "amount" : amountSpinBox.value,
             "unit" : "ml"
