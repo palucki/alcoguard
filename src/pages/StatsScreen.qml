@@ -119,8 +119,10 @@ Page {
                     onClicked: {
                         //                        swipeView.currentIndex = main.ScreenIndex.Edit;
                         swipeView.setCurrentIndex(root.addDrinkPageIndex);
-                        editDrink.drinkId = drinkModel.get(index).id;
-                        editDrink.itemDateTime = drinkModel.get(index).timestamp;
+                        editDrink.setDrink(drinkModel.get(index))
+//                        editDrink.drinkId = drinkModel.get(index).id;
+//                        editDrink.itemDateTime = drinkModel.get(index).timestamp;
+
                     }
                 }
             }

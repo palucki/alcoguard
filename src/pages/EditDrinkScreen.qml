@@ -22,6 +22,13 @@ Page {
         beverageCombo.model = DB.loadBeverages()
     }
 
+    function setDrink(drink) {
+        drinkId = drink.id
+        amountSpinBox.value = drink.amount
+        beverageCombo.currentIndex = beverageCombo.findBeverageIndex()
+        itemDateTime = drink.timestamp;
+    }
+
     function getDrink() {
         return {
             "id" : parseInt(drinkId),
@@ -235,6 +242,14 @@ Page {
             }
 
             ComboBox {
+                function findBeverageIndex(id) {
+                    for(var i = 0; i < model.count; ++i) {
+                        if (model[i].id === id)
+                            return i;
+                    }
+                    return 0;
+                }
+
                 id: beverageCombo
                 model: DB.loadBeverages();
                 textRole: "name"
