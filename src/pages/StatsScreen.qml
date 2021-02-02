@@ -50,7 +50,7 @@ Page {
     function updateGraph() {
         chartViewId.removeAllSeries();
 
-        var series = chartViewId.createSeries(ChartView.SeriesTypeLine, root.usedBeverages[0].name, dateTimeAxis, valueAxis);
+        var series = chartViewId.createSeries(ChartView.SeriesTypeLine, 'vodka', dateTimeAxis, valueAxis);
 
         for(var j = 0; j < drinkSortedModel.items.count; j ++)
         {

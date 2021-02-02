@@ -3,6 +3,19 @@ function dbInit() {
     db = LocalStorage.openDatabaseSync("drinks", "1.0", "DrinksDatabase", 100000);
 }
 
+function deleteBeverage(id) {
+    console.log("Deleting beverage. Id: " + id)
+
+    if(!db)
+        return;
+
+    db.transaction(function(tx){
+        var result = tx.executeSql("DELETE FROM beverage WHERE id = %1".arg(id));
+    });
+
+    console.log("Beverage deleted")
+}
+
 function saveBeverage(beverage) {
     if(!db)
         return;

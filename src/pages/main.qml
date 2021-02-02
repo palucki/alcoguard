@@ -21,7 +21,6 @@ ApplicationWindow {
     property var sessionToken : ""
     property var currentDrinkId : 0;
 
-    property var usedBeverages;// ["vodka", "beer", "wine", "whisky"]
     property var usedCurrencies: ["PLN", "USD", "EUR", "GBP"]
 
     readonly property int homePageIndex : 0;
@@ -116,6 +115,9 @@ ApplicationWindow {
 
         SettingsScreen {
             id: settings
+            onBeverageChanged: {
+                editDrink.updateBeverages();
+            }
         }
 
         //        Timer {

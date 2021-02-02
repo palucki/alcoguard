@@ -3,6 +3,8 @@ import QtQml 2.13
 import QtQuick.Layouts 1.13
 import QtQuick.Controls 2.13
 
+import QtQuick.LocalStorage 2.13
+import "../Database.js" as DB
 
 Page {
 
@@ -15,6 +17,10 @@ Page {
     signal saveDrink;
 
     property var returnToIndex : homePageIndex;
+
+    function updateBeverages() {
+        beverageCombo.model = DB.loadBeverages()
+    }
 
     function getDrink() {
         return {
@@ -229,7 +235,7 @@ Page {
 
             ComboBox {
                 id: beverageCombo
-                model: root.usedBeverages
+                model: DB.loadBeverages();
                 textRole: "name"
             }
         }

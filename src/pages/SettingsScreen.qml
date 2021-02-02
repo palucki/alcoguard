@@ -9,6 +9,8 @@ import "../Database.js" as DB
 Item {
     id: settingsPageId
 
+    signal beverageChanged;
+
     Settings {
         id: settings
         property alias wireless: wirelessSwitch.checked
@@ -17,11 +19,28 @@ Item {
         //        property alias brightness: brightnessSlider.value
     }
 
+    function saveBeverage(beverage) {
+        DB.saveBeverage(beverage);
+        beveragesModel.append(beverage);
+        // TODO: handle update
+        //        var index = find(drinkModel, function(item) { return item.id === drink.id })
+        //        if(index !== null)
+        //            drinkModel.remove(index);
+        //        addDrink(drink);
+        beverageChanged();
+    }
+
+    function deleteBeverage(index, id) {
+        DB.deleteBeverage(id)
+        beveragesModel.remove(index)
+        beverageChanged();
+    }
+
     Component.onCompleted: {
         DB.dbInit();
         var beverages = DB.loadBeverages();
-        if(beverages.length > 0)
-            root.usedBeverages = beverages
+//        if(beverages.length > 0)
+//            root.usedBeverages = beverages
 
         for(var i = 0 ; i < beverages.length; i++)
             beveragesModel.append({"id" : beverages[i].id, "name" : beverages[i].name })
@@ -52,7 +71,7 @@ Item {
                 icon.source: "../../images/icons/delete.png"
                 onClicked: {
                     console.log("Will remove " + index);// + " which containst id: " + usedBeverages.get(index).id + " " + usedBeverages.get(index).name)
-                    beveragesModel.remove(index)
+                    deleteBeverage(index, beveragesModel.get(index).id);
                 }
             }
         }
@@ -107,8 +126,10 @@ Item {
                     width: 50
                     icon.source: "../../images/icons/add.png"
                     onClicked: {
-                        console.log("Will add new beverage: " + addBeverageName.text)
-                        beveragesModel.append({"name" : addBeverageName.text})
+                        if(addBeverageName.text && addBeverageName.text.trim().length) {
+                            console.log("Will add new beverage: " + addBeverageName.text)
+                            saveBeverage({"name" : addBeverageName.text});
+                        }
                         addBeverageName.text = ""
                     }
 
