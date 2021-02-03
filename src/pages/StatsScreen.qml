@@ -10,6 +10,7 @@ import QtQuick.LocalStorage 2.13
 import "../Database.js" as DB
 
 Page {
+    signal drinksModified;
     property var sessionToken : ""
     //    property var drinkListModel ;
     //    property var drinkListDelegate;
@@ -92,6 +93,8 @@ Page {
 
         updateGraph()
         updateAxes();
+
+        drinksModified();
     }
 
     function removeDrink(id, index) {
@@ -102,6 +105,8 @@ Page {
 
         updateGraph()
         updateAxes();
+
+        drinksModified();
     }
 
     Component {

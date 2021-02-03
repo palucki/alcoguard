@@ -3,6 +3,23 @@ function dbInit() {
     db = LocalStorage.openDatabaseSync("drinks", "1.0", "DrinksDatabase", 100000);
 }
 
+function daysWithDrink() {
+    if(!db)
+        return;
+
+    var days = [];
+
+    db.transaction(function(tx){
+        var result = tx.executeSql("SELECT distinct date(consumed) as drinkdate FROM drink;");
+
+        for(var i = 0; i < result.rows.length; i++) {
+            days.push(result.rows.item(i).drinkdate);
+        }
+    });
+
+    return days;
+}
+
 function deleteBeverage(id) {
     console.log("Deleting beverage. Id: " + id)
 
@@ -42,7 +59,7 @@ function loadBeverages() {
     var beverages = [];
 
     db.transaction(function(tx){
-        var result = tx.executeSql("SELECT * FROM beverage ORDER BY id");
+        var result = tx.executeSql("SELECT id, name FROM beverage ORDER BY id");
 
         for(var i = 0; i < result.rows.length; i++) {
             var beverage = {

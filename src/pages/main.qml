@@ -110,6 +110,9 @@ ApplicationWindow {
         StatsScreen {
             id: alcometerScreen
             sessionToken : root.sessionToken
+            onDrinksModified: {
+                calendarScreen.loadDaysWithDrinks()
+            }
         }
 
 
