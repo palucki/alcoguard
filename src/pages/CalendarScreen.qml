@@ -30,6 +30,11 @@ Item {
 
         style: CalendarStyle {
             dayDelegate: Rectangle {
+                Rectangle {
+                    anchors.fill: parent
+                    color: (styleData.date.toISOString().slice(0,10) === new Date().toISOString().slice(0,10)) ? "lightblue" : "white"
+                }
+
                 Label {
                     text: styleData.date.getDate()
                     anchors.left: parent.left
