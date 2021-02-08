@@ -1,30 +1,32 @@
 <RCC>
     <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>Database.js</file>
         <file>pages/LoginForm.qml</file>
         <file>pages/Welcome.qml</file>
-        <file>pages/main.qml</file>
-        <file>qtquickcontrols2.conf</file>
         <file>pages/Splash.qml</file>
-        <file>../images/splash.png</file>
-        <file>Database.js</file>
-        <file>../images/dario.jpg</file>
+        <file>pages/EditDrinkScreen.qml</file>
+        <file>pages/SettingsScreen.qml</file>
+        <file>pages/CalendarScreen.qml</file>
         <file>pages/SignupForm.qml</file>
         <file>pages/StatsScreen.qml</file>
+        <file>components/TabButtonWithIcon.qml</file>
+        <file>components/AddDrinkButton.qml</file>
+        <file>components/TimeTumbler.qml</file>
+        <file>../images/dario.jpg</file>
+        <file>../images/splash.png</file>
         <file>../images/icons/add.png</file>
         <file>../images/icons/remove.png</file>
         <file>../images/icons/back.png</file>
         <file>../images/icons/edit.png</file>
-        <file>pages/EditDrinkScreen.qml</file>
-        <file>pages/SettingsScreen.qml</file>
-        <file>pages/CalendarScreen.qml</file>
         <file>../images/icons/calendar.png</file>
         <file>../images/icons/home.png</file>
         <file>../images/icons/settings.png</file>
         <file>../images/icons/stats.png</file>
-        <file>pages/TabButtonWithIcon.qml</file>
-        <file>pages/AddDrinkButton.qml</file>
         <file>../images/icons/delete.png</file>
         <file>../images/icons/drink.png</file>
         <file>../images/icons/no_drinks.png</file>
+        <file>../images/icons/save.png</file>
     </qresource>
 </RCC>

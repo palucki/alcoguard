@@ -8,6 +8,7 @@ import QtQml.Models 2.13
 import QtQuick.LocalStorage 2.13
 
 import "../Database.js" as DB
+import "../components"
 
 Page {
     signal drinksModified;

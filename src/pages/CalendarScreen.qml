@@ -5,6 +5,7 @@ import QtGraphicalEffects 1.0
 
 import QtQuick.LocalStorage 2.13
 import "../Database.js" as DB
+import "../components"
 
 Item {
     property var daysWithDrinks;
