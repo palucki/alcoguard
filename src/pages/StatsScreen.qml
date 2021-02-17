@@ -113,13 +113,14 @@ Page {
     Component {
         id: drinkDelegate
         RowLayout {
+            width: masterLayout.width
             //                height: 50
             Text {
                 //text: Qt.formatDateTime(Date.fromLocaleString(Qt.locale(), timestamp, "dd-MM-yyyy hh:mm"), "hh:mm") + " " + amount + unit + " of " + beverage;
                 id: textDelegate
                 text: Qt.formatDateTime(timestamp, "dddd hh:mm") + " " + amount + unit + " of " + beverage;
                 font.pixelSize: 12
-
+                Layout.fillWidth: true
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
@@ -133,23 +134,11 @@ Page {
                 }
             }
 
-            //            Button {
-            //                id: editOneButton
-            //                text: "Edit"
-            ////                icon.source: "../../images/icons/edit.png"
-            ////                icon.height: 15
-            //                onClicked: {
-            //                    swipeView.currentIndex = 5;
-            //                    editDrink.drinkId = drinkModel.get(index).id;
-            //                    editDrink.itemDateTime = drinkModel.get(index).timestamp;
-            //                }
-            //            }
-
-            Button {
+            RoundButton {
                 id: removeOneButton
+                Layout.alignment: Qt.AlignRight
                 //                anchors.right: masterLayout.right
-                text: "Remove"
-                //                icon.source: "../../images/icons/remove.png"
+                icon.source: "../../images/icons/delete.png"
                 //                icon.height: 15
                 onClicked: {
                     removeDrink(drinkModel.get(index).id, index);

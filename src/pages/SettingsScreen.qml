@@ -210,6 +210,18 @@ Page {
             }
 
             RoundButton {
+                id: cancelNewBeverageId
+                Layout.alignment: Qt.AlignRight
+                height: 50
+                width: 50
+                icon.source: "../../images/icons/clear.png"
+                onClicked: {
+                    addBeverageName.text = ""
+                    stackView.pop();
+                }
+            }
+
+            RoundButton {
                 id: saveBeverageButtonId
                 Layout.alignment: Qt.AlignRight
                 height: 50

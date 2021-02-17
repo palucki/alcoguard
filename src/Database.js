@@ -10,7 +10,7 @@ function daysWithDrink() {
     var days = [];
 
     db.transaction(function(tx){
-        var result = tx.executeSql("SELECT distinct date(consumed) as drinkdate FROM drink;");
+        var result = tx.executeSql("SELECT distinct date(consumed) as drinkdate FROM drink order by date(consumed);");
 
         for(var i = 0; i < result.rows.length; i++) {
             days.push(result.rows.item(i).drinkdate);
@@ -112,7 +112,7 @@ function saveDrink(drink) {
 
         if(result.rows.length === 1) {
             tx.executeSql('UPDATE drink SET beverage_id = ?, amount_ml = ?, consumed = ? WHERE id = ?',
-                          [drink.beverage_id, drink.amount, drink.timestamp.toISOString(), drink.id]);
+                          [drink.beverage_id, drink.amount, drink.timestamp, drink.id]);
         }
         else {
             result = tx.executeSql('INSERT INTO drink (beverage_id, amount_ml, consumed) VALUES (?,?,?)',

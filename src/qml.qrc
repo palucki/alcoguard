@@ -28,5 +28,6 @@
         <file>../images/icons/drink.png</file>
         <file>../images/icons/no_drinks.png</file>
         <file>../images/icons/save.png</file>
+        <file>../images/icons/clear.png</file>
     </qresource>
 </RCC>
