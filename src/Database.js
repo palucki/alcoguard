@@ -73,14 +73,19 @@ function loadBeverages() {
     return beverages;
 }
 
-function loadDrinks() {
+function loadDrinks(date) {
     if(!db)
         return;
 
     var drinks = [];
 
     db.transaction(function(tx){
-        var result = tx.executeSql("SELECT d.id, beverage_id, b.name AS beverage_name, amount_ml, consumed FROM drink AS d LEFT JOIN beverage AS b on d.beverage_id = b.id;");
+        var result;
+        if(date === undefined)
+            result = tx.executeSql("SELECT d.id, beverage_id, b.name AS beverage_name, amount_ml, consumed FROM drink AS d LEFT JOIN beverage AS b on d.beverage_id = b.id;");
+        else
+            result = tx.executeSql("SELECT d.id, beverage_id, b.name AS beverage_name, amount_ml, consumed " +
+                                   "FROM drink AS d LEFT JOIN beverage AS b on d.beverage_id = b.id WHERE date(consumed) = date(?);",[date]);
 
         for(var i = 0; i < result.rows.length; i++) {
             var res = result.rows.item(i);

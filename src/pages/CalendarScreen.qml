@@ -13,6 +13,7 @@ Item {
     property var streak;
     property var sober;
     property var iconSize : 20;
+    signal showDay(var date);
 
     function formatDate(date) {
         var dd = date.getDate() < 9 ? "0" + date.getDate() : date.getDate();
@@ -32,6 +33,9 @@ Item {
         var currentStreak = 1;
         var firstDrinkDate = new Date(daysWithDrinks[0]);
         var firstDrinkString = formatDate(firstDrinkDate)
+        var keep = true;
+        var day = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
+        var dayString = formatDate(day)
 
         if(daysWithDrinks.length === 0 || firstDrinkDate > currentDate)
         {
@@ -41,10 +45,6 @@ Item {
         {
             sober = false;
             //check alco days by finding first sober day smaller  than currentDate
-            var keep = true;
-            var day = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
-            var dayString = formatDate(day);
-
             while(daysWithDrinks.includes(dayString))
             {
                 day = new Date(day.getTime()  - 24 * 60 * 60 * 1000);
@@ -55,10 +55,6 @@ Item {
         else
         {
             //check sober days by finding first alco day smaller than currentDate
-            var keep = true;
-            var day = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
-            var dayString = formatDate(day)
-
             while(!daysWithDrinks.includes(dayString))
             {
                 day = new Date(day.getTime()  - 24 * 60 * 60 * 1000);
@@ -95,6 +91,14 @@ Item {
                 Rectangle {
                     anchors.fill: parent
                     color: (styleData.date.toISOString().slice(0,10) === new Date().toISOString().slice(0,10)) ? "lightblue" : "white"
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            console.log("Go to day " +  styleData.date)
+                            showDay(styleData.date)
+                        }
+                    }
+
                 }
 
                 Label {

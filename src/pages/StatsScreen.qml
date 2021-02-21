@@ -68,7 +68,21 @@ Page {
         return msecs;
     }
 
+    function filterByDate(date) {
+        drinkModel.clear()
+        var drinks = DB.loadDrinks(date);
+
+        for(var i = 0; i < drinks.length; i++) {
+            addDrink(drinks[i]);
+        }
+
+        updateGraph()
+        updateAxes();
+    }
+
     function loadDrinks() {
+        drinkModel.clear()
+
         var drinks = DB.loadDrinks();
 
         for(var i = 0; i < drinks.length; i++) {

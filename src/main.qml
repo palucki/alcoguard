@@ -96,20 +96,24 @@ ApplicationWindow {
 
         CalendarScreen {
             id: calendarScreen
+            onShowDay: {
+                statsScreen.filterByDate(date);
+                swipeView.setCurrentIndex(statsPageIndex)
+            }
         }
 
         EditDrinkScreen {
             id: editDrink
             onSaveDrink: {
                 var drink = editDrink.getDrink();
-                alcometerScreen.saveDrink(drink);
+                statsScreen.saveDrink(drink);
                 console.log("Returning to " + editDrink.returnToIndex)
                 swipeView.setCurrentIndex(editDrink.returnToIndex)
             }
         }
 
         StatsScreen {
-            id: alcometerScreen
+            id: statsScreen
             sessionToken : root.sessionToken
             onDrinksModified: {
                 calendarScreen.loadDaysWithDrinks()
