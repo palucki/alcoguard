@@ -98,7 +98,6 @@ Item {
                             showDay(styleData.date)
                         }
                     }
-
                 }
 
                 Label {
@@ -111,8 +110,7 @@ Item {
 
                 Image {
                     id: drinkIconId
-                    visible: styleData.date <= new Date()
-
+                    visible: styleData.date.setHours(0,0,0,0) <= new Date()
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
                     width: iconSize
@@ -120,8 +118,9 @@ Item {
                     source: isInArray(daysWithDrinks, styleData.date) ? "../../images/icons/drink.png" : "../../images/icons/no_drinks.png"
 
                 }
+
                 ColorOverlay {
-                    visible: styleData.date <= new Date()
+                    visible: styleData.date.setHours(0,0,0,0) <= new Date()
                     anchors.fill: drinkIconId
                     source: drinkIconId
                     color: isInArray(daysWithDrinks, styleData.date) ? "darkorange" : "green"
